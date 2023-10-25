@@ -3,6 +3,7 @@
 
 #include "objectCreator.hpp"
 #include "lazarControls.hpp"
+#include <astroid.hpp>
 #include <vector>
 
 using namespace threepp;
@@ -67,6 +68,7 @@ namespace {
             if (!speed_.empty() && speedY_ == 0 && speedX_ == 0) {
                 lazarControls.setLazarSpeed(speed_[0].first, speed_[0].second);
             }
+
             lazarControls.updateLazars(scene_, dt_);
         }
 

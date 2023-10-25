@@ -24,13 +24,11 @@ namespace {
         }
 
         void updateLazars(const std::shared_ptr<Scene> scene, const double dt) {
-            dt_ = dt;
-
             for (size_t i = 0; i < lazars_.size(); ++i) {   //Modifisert ChatGPT kode
                 auto lazar = lazars_[i];
-                lazar->position.x += lazarSpeeds_[i].first * dt_ * speedMultiplier_;
-                lazar->position.y += lazarSpeeds_[i].second * dt_ * speedMultiplier_;
-                creationTime_[i] += dt_;    //Slutt modifisert ChatGPT kode
+                lazar->position.x += lazarSpeeds_[i].first * dt * speedMultiplier_;
+                lazar->position.y += lazarSpeeds_[i].second * dt * speedMultiplier_;
+                creationTime_[i] += dt;    //Slutt modifisert ChatGPT kode
                 if (creationTime_[i] >= 2) {
                     scene->remove(*lazar);
                     lazars_.erase(lazars_.begin() + i);
@@ -45,7 +43,6 @@ namespace {
         int lazarSpeedX_ = 0;
         int lazarSpeedY_ = 0;
         int speedMultiplier_ = 40;
-        float dt_ = 0;
         std::vector<double> creationTime_;
         std::vector<std::shared_ptr<Object>> lazars_;
         std::vector<std::pair<int, int>> lazarSpeeds_;
