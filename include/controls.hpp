@@ -3,18 +3,18 @@
 
 #include "objectCreator.hpp"
 #include "lazarControls.hpp"
-#include <astroid.hpp>
 #include <vector>
+#include <iostream>
 
 using namespace threepp;
 namespace {
     class Controls : public KeyListener {
 
     public:
-        Controls(Object3D &obj, const std::shared_ptr<Scene> scene) : obj_(obj), scene_(scene) {
+        Controls(Object3D &obj, const std::shared_ptr<Scene>& scene) : obj_(obj), scene_(scene) {
         }
 
-        void onKeyPressed(const KeyEvent evt) {
+        void onKeyPressed(const KeyEvent evt) override {
             if (evt.key == Key::W) {
                 speedY_ += 1;
             }
@@ -28,8 +28,12 @@ namespace {
                 speedX_ += 1;
             }
             if (evt.key == Key::SPACE) {
-                lazarControls.createLazar(scene_, obj_);
+                lazarControls_.createLasar(scene_, obj_);
             }
+        }
+
+        std::vector<std::shared_ptr<Object>>& getLasars(){
+            return lazarControls_.getLasars();
         }
 
         void onKeyReleased(const KeyEvent evt) override {
@@ -55,33 +59,39 @@ namespace {
             if (speedY_ != 0 && speedX_ != 0) {
                 obj_.position.x += (speedMultiplier_ * speedX_ * dt_) / 2;
                 obj_.position.y += (speedMultiplier_ * speedY_ * dt_) / 2;
-                lazarControls.setLazarSpeed(speedX_, speedY_);
+                lazarControls_.setLasarSpeed(speedX_, speedY_);
             } else if (speedY_ == 0 && speedX_ != 0 || speedY_ != 0 && speedX_ == 0) {
                 obj_.position.y += speedMultiplier_ * speedY_ * dt_;
                 obj_.position.x += speedMultiplier_ * speedX_ * dt_;
-                lazarControls.setLazarSpeed(speedX_, speedY_);
+                lazarControls_.setLasarSpeed(speedX_, speedY_);
+            }
+            if (obj_.position.x > 30 || obj_.position.x < -30){
+                obj_.position.x *= -1;
+            }
+            if (obj_.position.y > 30 || obj_.position.y < -30){
+                obj_.position.y *= -1;
             }
             if (!speed_.empty() && speedY_ != 0 || !speed_.empty() && speedX_ != 0) {
                 speed_.erase(speed_.begin());
-                speed_.push_back(std::make_pair(speedX_, speedY_));
+                speed_.emplace_back(speedX_, speedY_);
             }
             if (!speed_.empty() && speedY_ == 0 && speedX_ == 0) {
-                lazarControls.setLazarSpeed(speed_[0].first, speed_[0].second);
+                lazarControls_.setLasarSpeed(speed_[0].first, speed_[0].second);
             }
 
-            lazarControls.updateLazars(scene_, dt_);
+            lazarControls_.updateLasars(scene_, dt_);
         }
 
     private:
-        int speedMultiplier_ = 10;
+        const float speedMultiplier_ = 10;
         float dt_{0};
-        int speedY_ = 0;
-        int speedX_ = 0;
-        std::vector<std::pair<int, int>> speed_;
+        float speedY_ = 0;
+        float speedX_ = 0;
+        std::vector<std::pair<float, float>> speed_;
         Object3D &obj_;
         std::shared_ptr<Scene> scene_;
         std::vector<std::shared_ptr<Object>> lazars_;
-        LazarControls lazarControls;
+        LasarControls lazarControls_;
     };
 }
 #endif //PLACEHOLDER_CONTROLS_HPP

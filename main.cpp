@@ -1,11 +1,14 @@
 #include "controls.hpp"
+#include "astroid.hpp"
+#include <string>
 
 using namespace threepp;
 
 int main() {
 
-    int creationTime = 1;
+    float creationTime = 0.5;
     double timePassed = creationTime + 1;
+    std::string text = "Score: 0";
 
     Canvas canvas("threepp demo", {{"aa", 4}});
     GLRenderer renderer(canvas.size());
@@ -26,7 +29,7 @@ int main() {
 
 
     TextRenderer textRenderer;
-    auto &textHandle = textRenderer.createHandle("Astroids");
+    auto &textHandle = textRenderer.createHandle(text);
     textHandle.verticalAlignment = threepp::TextHandle::VerticalAlignment::BOTTOM;
     textHandle.setPosition(0, canvas.size().height);
     textHandle.scale = 2;
@@ -44,15 +47,20 @@ int main() {
 
         if (timePassed > creationTime){
             astroid.createAstroids(scene);
-            timePassed = 0;
+            timePassed -= creationTime;
         }
 
         astroid.updateAstroids(scene, dt);
+        const auto& lasars = control.getLasars();
+        astroid.checkColison(lasars, shipPtr, scene);
 
         control.setDeltaTime(dt);
         control.setSpeed();
 
         renderer.render(*scene, *camera);
+
+        text = "Score: " + std::to_string(astroid.getScore());
+        textHandle.setText(text);
 
         renderer.resetState();
         textRenderer.render();
