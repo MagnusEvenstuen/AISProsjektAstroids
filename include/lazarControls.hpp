@@ -12,7 +12,7 @@ public:
 
     void createLasar(const std::shared_ptr<Scene>& scene, const Object3D &obj) {
         auto lasar = std::make_shared<Object>();
-        lasars_.emplace_back(lasar);
+        lasars_.push_back(lasar);
         lasar->setColor(Color::red);
         scene->add(*lasar);
         lasar->position.y = obj.position.y;

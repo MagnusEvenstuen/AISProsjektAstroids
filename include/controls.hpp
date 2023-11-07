@@ -1,10 +1,11 @@
 #ifndef PLACEHOLDER_CONTROLS_HPP
 #define PLACEHOLDER_CONTROLS_HPP
+#define _USE_MATH_DEFINES
 
 #include "objectCreator.hpp"
 #include "lazarControls.hpp"
 #include <vector>
-#include <iostream>
+#include <cmath>
 
 using namespace threepp;
 namespace {
@@ -57,13 +58,29 @@ namespace {
 
         void setSpeed() {
             if (speedY_ != 0 && speedX_ != 0) {
-                obj_.position.x += (speedMultiplier_ * speedX_ * dt_) / 2;
-                obj_.position.y += (speedMultiplier_ * speedY_ * dt_) / 2;
+                obj_.position.x += (speedMultiplier_ * speedX_ * dt_)/2;
+                obj_.position.y += (speedMultiplier_ * speedY_ * dt_)/2;
                 lazarControls_.setLasarSpeed(speedX_, speedY_);
+                float rotationAngle = atan2(speedY_, speedX_);
+                targetAngel_ = rotationAngle + M_PI/2;
             } else if (speedY_ == 0 && speedX_ != 0 || speedY_ != 0 && speedX_ == 0) {
                 obj_.position.y += speedMultiplier_ * speedY_ * dt_;
                 obj_.position.x += speedMultiplier_ * speedX_ * dt_;
                 lazarControls_.setLasarSpeed(speedX_, speedY_);
+                float rotationAngle = atan2(speedY_, speedX_);
+                targetAngel_ = rotationAngle + M_PI/2;
+            }
+            float angleDiff = targetAngel_ - obj_.rotation.z();
+            if (angleDiff < -M_PI){
+                angleDiff += 2 * M_PI;
+            } else if (angleDiff > M_PI) {
+                angleDiff -= 2 * M_PI;
+            }
+
+            if (angleDiff < 0) {
+                obj_.rotation.z -= M_PI / 180.f * dt_ * 500;
+            } else if (angleDiff > 0) {
+                obj_.rotation.z += M_PI / 180.f * dt_ * 500;
             }
             if (obj_.position.x > 30 || obj_.position.x < -30){
                 obj_.position.x *= -1;
@@ -87,6 +104,7 @@ namespace {
         float dt_{0};
         float speedY_ = 0;
         float speedX_ = 0;
+        float targetAngel_ = 0;
         std::vector<std::pair<float, float>> speed_;
         Object3D &obj_;
         std::shared_ptr<Scene> scene_;

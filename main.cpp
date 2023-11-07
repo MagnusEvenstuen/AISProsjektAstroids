@@ -1,3 +1,4 @@
+
 #include "controls.hpp"
 #include "astroid.hpp"
 #include <string>
@@ -17,13 +18,15 @@ int main() {
     auto camera = PerspectiveCamera::create();
     camera->position.z = 50;
 
-    const std::shared_ptr<Scene> scene = Scene::create();   //Kode fra ChatGPT
-    std::shared_ptr<Object> shipPtr = std::make_shared<Object>();
-    shipPtr->setColor(Color::blue);
-    scene->add(*shipPtr);   //Slutt kode fra ChatGPT
+    const std::shared_ptr<Scene> scene = Scene::create();
+    auto geometry = PlaneGeometry::create(5, 5);
+    auto material = MeshBasicMaterial::create();
+    material->map = TextureLoader().load("../textures/Millenium Falcon.png");
+    auto ship = Mesh::create(geometry, material);
+    scene->add(ship);
 
 
-    Controls control(*shipPtr, scene);
+    Controls control(*ship, scene);
     canvas.addKeyListener(&control);
     Astroid astroid;
 
@@ -52,7 +55,7 @@ int main() {
 
         astroid.updateAstroids(scene, dt);
         const auto& lasars = control.getLasars();
-        astroid.checkColison(lasars, shipPtr, scene);
+        astroid.checkColison(lasars, ship, scene);
 
         control.setDeltaTime(dt);
         control.setSpeed();

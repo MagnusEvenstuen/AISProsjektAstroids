@@ -3,18 +3,21 @@
 
 #include <objectCreator.hpp>
 #include <random>
-#include <iostream>
 #include <algorithm>
 
 class Astroid{
 public:
     void createAstroids(const std::shared_ptr<Scene>& scene){
         for (int i = 0; i < 2; i++) {
-            auto astroid = std::make_shared<Object>();
+            material_->map = texture_;
+            material_->map->offset.set(0.5, 0.5);
+            auto astroid = Sprite::create(material_);
+            astroid->scale.set(5, 5, 0);
             astroids_.push_back(astroid);
             creationTime_.push_back(0);
-            astroid->setColor(Color::white);
-            scene->add(*astroid);
+
+
+            scene->add(astroid);
 
             std::random_device rd;
             std::mt19937 gen(rd());
@@ -44,7 +47,7 @@ public:
             astroid->position.y += astroidSpeeds_[i].second * dt;
             creationTime_[i] += dt;
 
-            if (astroid->position.x > 30 || astroid->position.x < -30 || astroid->position.y > 30 || astroid->position.y < -30) {
+            if (astroid->position.x > 32 || astroid->position.x < -32 || astroid->position.y > 32 || astroid->position.y < -32) {
                 scene->remove(*astroid);
                 astroids_.erase(astroids_.begin() + i);
                 creationTime_.erase(creationTime_.begin() + i);
@@ -54,16 +57,16 @@ public:
 
         }
     }
-    void checkColison(const std::vector<std::shared_ptr<Object>>& lasars, std::shared_ptr<Object>& ship, const std::shared_ptr<Scene>& scene){     //Denne funksjonen er for det meste min kode, litt ChatGPT til feilretting, og litt hjelp fra medstudent.
+    void checkColison(const std::vector<std::shared_ptr<Object>>& lasars, std::shared_ptr<Mesh> &ship, const std::shared_ptr<Scene>& scene){     //Denne funksjonen er for det meste min kode, litt ChatGPT til feilretting, og litt hjelp fra medstudent.
         for (auto as = astroids_.begin(); as != astroids_.end();) {
             auto &astroid = **as;
             auto ls = lasars.begin();
             while (ls != lasars.end()) {
                 auto lasar = *ls;
-                if (lasar->position.x + 1 > astroid.position.x &&
-                    lasar->position.x < astroid.position.x + 1 &&
-                    lasar->position.y + 1 > astroid.position.y &&
-                    lasar->position.y < astroid.position.y + 1) {
+                if (lasar->position.x + 2 > astroid.position.x &&
+                    lasar->position.x < astroid.position.x + 2 &&
+                    lasar->position.y + 2 > astroid.position.y &&
+                    lasar->position.y < astroid.position.y + 2) {
                     scene->remove(astroid);
                     as = astroids_.erase(as);
                     astroidSpeeds_.erase(astroidSpeeds_.begin() + std::distance(astroids_.begin(), as));
@@ -78,10 +81,10 @@ public:
         }
         for (auto as = astroids_.begin(); as < astroids_.end(); as++) {
             auto &astroid = **as;
-            if (ship->position.x + 1 > astroid.position.x &&
-                ship->position.x < astroid.position.x + 1 &&
-                ship->position.y + 1 > astroid.position.y &&
-                ship->position.y < astroid.position.y + 1) {
+            if (ship->position.x + 2 > astroid.position.x &&
+                ship->position.x < astroid.position.x + 2 &&
+                ship->position.y + 2 > astroid.position.y &&
+                ship->position.y < astroid.position.y + 2) {
                 ship->position.x = 0;
                 ship->position.y = 0;
                 score_ = 0;
@@ -94,11 +97,13 @@ public:
     }
 
 private:
-    std::vector<std::shared_ptr<Object>> astroids_;
+    std::vector<std::shared_ptr<Sprite>> astroids_;
     std::vector<float> creationTime_;
     std::vector<std::pair<float, float>> astroidSpeeds_;
-    int minSpeed_ = -20;
-    int maxSpeed_ = 20;
+    const std::shared_ptr<Texture> texture_ = TextureLoader().load("../textures/Astroid.png");
+    std::shared_ptr<SpriteMaterial> material_ = SpriteMaterial::create();
+    const int minSpeed_ = -20;
+    const int maxSpeed_ = 20;
     int score_ = 0;
 };
 

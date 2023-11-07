@@ -8,5 +8,6 @@ find_package(imgui CONFIG REQUIRED)
 
 add_executable(placeholder main.cpp)
 target_include_directories(placeholder PRIVATE include)
+target_include_directories(placeholder PRIVATE textures)
 
 target_link_libraries(placeholder PUBLIC threepp::threepp imgui::imgui)
