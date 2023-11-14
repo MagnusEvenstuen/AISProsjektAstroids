@@ -49,7 +49,8 @@ namespace {
             dt_ = dt;
         }
 
-        void setSpeed() {
+        void setSpeed(std::shared_ptr<SpriteMaterial>& image) {
+            image->rotation += rotaition_ * dt_ * 200;
             obj_.rotation.z += rotaition_ * dt_ * 200;
             Vector2 direction(cos(obj_.rotation.z()), sin(obj_.rotation.z()));
             obj_.position.x += speed_ * dt_ * speedMultiplier_ * direction[0];

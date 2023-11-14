@@ -4,7 +4,6 @@
 #include "ObjectCreator.hpp"
 #include <random>
 #include <algorithm>
-#include <iostream>
 
 class Astroid{
 public:
@@ -57,7 +56,7 @@ public:
             }
         }
     }
-    void checkColison(const std::vector<std::shared_ptr<Object>>& lasars, std::shared_ptr<Mesh> &ship, const std::shared_ptr<Scene>& scene){     //Denne funksjonen er for det meste min kode, litt ChatGPT til feilretting, og litt hjelp fra medstudent.
+    void checkColison(const std::vector<std::shared_ptr<Object>>& lasars, const std::shared_ptr<Sprite>& ship, const std::shared_ptr<Scene>& scene){     //Denne funksjonen er for det meste min kode, litt ChatGPT til feilretting, og litt hjelp fra medstudent.
         for (auto as = astroids_.begin(); as != astroids_.end();) {
             auto &astroid = **as;
             for (int i = 0; i < astroids_.size(); i++){
