@@ -1,12 +1,11 @@
 #include "Controls.hpp"
 #include "Astroid.hpp"
 #include <string>
-
 using namespace threepp;
 
 int main() {
 
-    float creationTime = 0.5;
+    const float creationTime = 0.5;
     double timePassed = creationTime + 1;
     std::string text = "Score: 0";
 
@@ -14,16 +13,24 @@ int main() {
     GLRenderer renderer(canvas.size());
     renderer.setClearColor(Color::black);
 
-    auto camera = PerspectiveCamera::create();
+    const auto camera = OrthographicCamera::create(-30, 30, 30, -30);
     camera->position.z = 50;
 
     const std::shared_ptr<Scene> scene = Scene::create();
-    auto geometry = PlaneGeometry::create(5, 5);
-    auto material = MeshBasicMaterial::create();
-    material->map = TextureLoader().load("../textures/Millenium Falcon.png");
-    auto ship = Mesh::create(geometry, material);
-    scene->add(ship);
 
+    auto materialBackground = SpriteMaterial::create();
+    materialBackground->map = TextureLoader().load("../textures/background.jpg");
+    materialBackground->map->offset.set(0.5, 0.5);
+    auto background = Sprite::create(materialBackground);
+    background->scale.set(60, 60, 0);
+    scene->add(background);
+
+    auto materialShip = SpriteMaterial::create();
+    materialShip->map = TextureLoader().load("../textures/Millenium Falcon.png");
+    materialShip->map->offset.set(0.5, 0.5);
+    auto ship = Sprite::create(materialShip);
+    ship->scale.set(5, 5, 0);
+    scene->add(ship);
 
     Controls control(*ship, scene);
     canvas.addKeyListener(&control);
@@ -57,7 +64,7 @@ int main() {
         astroid.checkColison(lasars, ship, scene);
 
         control.setDeltaTime(dt);
-        control.setSpeed();
+        control.setSpeed(materialShip);
 
         renderer.render(*scene, *camera);
 
