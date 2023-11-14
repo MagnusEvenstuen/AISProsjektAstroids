@@ -2,8 +2,8 @@
 #define PLACEHOLDER_CONTROLS_HPP
 #define _USE_MATH_DEFINES
 
-#include "objectCreator.hpp"
-#include "lazarControls.hpp"
+#include "ObjectCreator.hpp"
+#include "LaserControls.hpp"
 #include <vector>
 #include <cmath>
 #include <iostream>
@@ -26,7 +26,7 @@ namespace {
                 rotaition_ -= M_PI/180;
             }
             if (evt.key == Key::SPACE) {
-                lazarControls_.createLasar(scene_, obj_);
+                laserControls_.createLasar(scene_, obj_);
             }
         }
         void onKeyReleased(const KeyEvent evt) override {
@@ -42,7 +42,7 @@ namespace {
         }
 
         std::vector<std::shared_ptr<Object>>& getLasars(){
-            return lazarControls_.getLasars();
+            return laserControls_.getLasars();
         }
 
         void setDeltaTime(const float dt) {
@@ -51,7 +51,7 @@ namespace {
 
         void setSpeed() {
             obj_.rotation.z += rotaition_ * dt_ * 200;
-            Vector3 direction(cos(obj_.rotation.z()), sin(obj_.rotation.z()), 0);
+            Vector2 direction(cos(obj_.rotation.z()), sin(obj_.rotation.z()));
             obj_.position.x += speed_ * dt_ * speedMultiplier_ * direction[0];
             obj_.position.y += speed_ * dt_ * speedMultiplier_ * direction[1];
             if (obj_.position.x > 30 || obj_.position.x < -30){
@@ -59,19 +59,18 @@ namespace {
             } else if (obj_.position.y > 30 || obj_.position.y < -30){
                 obj_.position.y *= -1;
             }
-            lazarControls_.setLasarSpeed(direction[0], direction[1]);
-            lazarControls_.updateLasars(scene_, dt_);
+            laserControls_.setLasarSpeed(direction[0], direction[1]);
+            laserControls_.updateLasars(scene_, dt_);
         }
 
     private:
-        const float speedMultiplier_ = 10;
+        const float speedMultiplier_ = 15;
         float dt_{0};
         float speed_ = 0;
         float rotaition_ = 0;
         Object3D &obj_;
         std::shared_ptr<Scene> scene_;
-        std::vector<std::shared_ptr<Object>> lazars_;
-        LasarControls lazarControls_;
+        LaserControls laserControls_;
     };
 }
 #endif //PLACEHOLDER_CONTROLS_HPP

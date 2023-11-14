@@ -1,6 +1,5 @@
-
-#include "controls.hpp"
-#include "astroid.hpp"
+#include "Controls.hpp"
+#include "Astroid.hpp"
 #include <string>
 
 using namespace threepp;
@@ -11,7 +10,7 @@ int main() {
     double timePassed = creationTime + 1;
     std::string text = "Score: 0";
 
-    Canvas canvas("threepp demo", {{"aa", 4}});
+    Canvas canvas("Astroids", {{"aa", 4}});
     GLRenderer renderer(canvas.size());
     renderer.setClearColor(Color::black);
 
@@ -49,7 +48,7 @@ int main() {
         timePassed += dt;
 
         if (timePassed > creationTime){
-            astroid.createAstroids(scene);
+            astroid.createAstroids(scene, 30);
             timePassed -= creationTime;
         }
 
