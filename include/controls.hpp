@@ -13,7 +13,8 @@ namespace {
     class Controls : public KeyListener {
 
     public:
-        Controls(Object3D &obj, const std::shared_ptr<Scene>& scene) : obj_(obj), scene_(scene) {
+        Controls(std::pair<std::shared_ptr<Sprite>, std::shared_ptr<SpriteMaterial>>& obj, std::shared_ptr<Scene>& scene, int& boardSize)
+            :obj_(obj), scene_(scene), boardSize_(boardSize) {
         }
         void onKeyPressed(const KeyEvent evt) override{
             if (evt.key == Key::W) {
@@ -26,7 +27,7 @@ namespace {
                 rotaition_ -= M_PI/180;
             }
             if (evt.key == Key::SPACE) {
-                laserControls_.createLasar(scene_, obj_);
+                laserControls_.createLasar(scene_, obj_.first);
             }
         }
         void onKeyReleased(const KeyEvent evt) override {
@@ -42,26 +43,30 @@ namespace {
         }
 
         std::vector<std::shared_ptr<Object>>& getLasars(){
-            return laserControls_.getLasars();
+            return laserControls_.getLasers();
+        }
+
+        std::vector<std::pair<float, float>>& getLaserSpeeds(){
+            return laserControls_.getLaserSpeeds();
         }
 
         void setDeltaTime(const float dt) {
             dt_ = dt;
         }
 
-        void setSpeed(std::shared_ptr<SpriteMaterial>& image) {
-            image->rotation += rotaition_ * dt_ * 200;
-            obj_.rotation.z += rotaition_ * dt_ * 200;
-            Vector2 direction(cos(obj_.rotation.z()), sin(obj_.rotation.z()));
-            obj_.position.x += speed_ * dt_ * speedMultiplier_ * direction[0];
-            obj_.position.y += speed_ * dt_ * speedMultiplier_ * direction[1];
-            if (obj_.position.x > 30 || obj_.position.x < -30){
-                obj_.position.x *= -1;
-            } else if (obj_.position.y > 30 || obj_.position.y < -30){
-                obj_.position.y *= -1;
+        void setSpeed() {
+            obj_.second->rotation += rotaition_ * dt_ * 200;
+            obj_.first->rotation.z += rotaition_ * dt_ * 200;
+            Vector2 direction(cos(obj_.first->rotation.z()), sin(obj_.first->rotation.z()));
+            obj_.first->position.x += speed_ * dt_ * speedMultiplier_ * direction[0];
+            obj_.first->position.y += speed_ * dt_ * speedMultiplier_ * direction[1];
+            if (obj_.first->position.x > boardSize_ + 2 || obj_.first->position.x < -boardSize_ - 2){
+                obj_.first->position.x *= -0.9;
+            } else if (obj_.first->position.y > boardSize_ + 2 || obj_.first->position.y < -boardSize_ - 2){
+                obj_.first->position.y *= -0.9;
             }
             laserControls_.setLasarSpeed(direction[0], direction[1]);
-            laserControls_.updateLasars(scene_, dt_);
+            laserControls_.updateLasars(scene_, dt_, boardSize_);
         }
 
     private:
@@ -69,7 +74,8 @@ namespace {
         float dt_{0};
         float speed_ = 0;
         float rotaition_ = 0;
-        Object3D &obj_;
+        int boardSize_ = 0;
+        std::pair<std::shared_ptr<Sprite>, std::shared_ptr<SpriteMaterial>> &obj_;
         std::shared_ptr<Scene> scene_;
         LaserControls laserControls_;
     };

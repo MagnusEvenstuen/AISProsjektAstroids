@@ -22,6 +22,15 @@ namespace {
             material_->color.copy(color);
         }
 
+        std::pair<std::shared_ptr<Sprite>, std::shared_ptr<SpriteMaterial>> createSprite(const std::string& texture, const float& sizeX, const float& sizeY, const float& sizeZ = 0){
+            auto materialSprite = SpriteMaterial::create();
+            materialSprite->map = TextureLoader().load(texture);
+            materialSprite->map->offset.set(0.5, 0.5);
+            auto sprite = Sprite::create(materialSprite);
+            sprite->scale.set(sizeX, sizeY, sizeZ);
+            return {sprite, materialSprite};
+        }
+
     private:
         std::shared_ptr<SphereGeometry> geometry_;
         std::shared_ptr<MeshBasicMaterial> material_;
