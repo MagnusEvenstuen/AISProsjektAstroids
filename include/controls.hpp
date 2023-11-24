@@ -1,5 +1,5 @@
-#ifndef PLACEHOLDER_CONTROLS_HPP
-#define PLACEHOLDER_CONTROLS_HPP
+#ifndef ASTROIDS_CONTROLS_HPP
+#define ASTROIDS_CONTROLS_HPP
 #define _USE_MATH_DEFINES
 
 #include "ObjectCreator.hpp"
@@ -13,7 +13,7 @@ namespace {
     class Controls : public KeyListener {
 
     public:
-        Controls(std::pair<std::shared_ptr<Sprite>, std::shared_ptr<SpriteMaterial>>& obj, std::shared_ptr<Scene>& scene, int& boardSize)
+        Controls(std::pair<std::shared_ptr<Sprite>, std::shared_ptr<SpriteMaterial>>& obj, std::shared_ptr<Scene>& scene, const int& boardSize)
             :obj_(obj), scene_(scene), boardSize_(boardSize) {
         }
         void onKeyPressed(const KeyEvent evt) override{
@@ -42,12 +42,8 @@ namespace {
             }
         }
 
-        std::vector<std::shared_ptr<Object>>& getLasars(){
+        std::vector<std::pair<std::shared_ptr<Sprite>, std::shared_ptr<SpriteMaterial>>>& getLasars(){
             return laserControls_.getLasers();
-        }
-
-        std::vector<std::pair<float, float>>& getLaserSpeeds(){
-            return laserControls_.getLaserSpeeds();
         }
 
         void setDeltaTime(const float dt) {
@@ -80,4 +76,4 @@ namespace {
         LaserControls laserControls_;
     };
 }
-#endif //PLACEHOLDER_CONTROLS_HPP
+#endif //ASTROIDS_CONTROLS_HPP

@@ -1,5 +1,5 @@
-#ifndef PLACEHOLDER_LASERCONTROLS_HPP
-#define PLACEHOLDER_LASERCONTROLS_HPP
+#ifndef ASTROIDS_LASERCONTROLS_HPP
+#define ASTROIDS_LASERCONTROLS_HPP
 
 class LaserControls {
 public:
@@ -11,12 +11,12 @@ public:
     }
 
     void createLasar(std::shared_ptr<Scene>& scene, const std::shared_ptr<Sprite>& obj) {
-        auto laser = std::make_shared<Object>();
+        auto laser = Object3D.createSprite(1, 1);
+        laser.second->color = Color::red;
         lasers_.push_back(laser);
-        laser->setColor(Color::red);
-        scene->add(lasers_.back());
-        laser->position.y = obj->position.y;
-        laser->position.x = obj->position.x;
+        scene->add(lasers_.back().first);
+        laser.first->position.y = obj->position.y;
+        laser.first->position.x = obj->position.x;
 
         laserSpeeds_.emplace_back(laserSpeedX_, laserSpeedY_);
     }
@@ -24,18 +24,18 @@ public:
     void updateLasars(std::shared_ptr<Scene>& scene, const float dt, const int& boardSize) {
         for (long long i = 0; i < lasers_.size(); i++) {   //Modifisert ChatGPT kode
             auto laser = lasers_[i];
-            laser->position.x += laserSpeeds_[i].first * dt * speedMultiplier_;
-            laser->position.y += laserSpeeds_[i].second * dt * speedMultiplier_;    //Slutt modifisert ChatGPT kode
-            if (laser->position.x > boardSize + 2 || laser->position.x < -boardSize - 2 || laser->position.y > boardSize + 2 || laser->position.y < -boardSize - 2) {
+            laser.first->position.x += laserSpeeds_[i].first * dt * speedMultiplier_;
+            laser.first->position.y += laserSpeeds_[i].second * dt * speedMultiplier_;    //Slutt modifisert ChatGPT kode
+            if (laser.first->position.x > boardSize + 2 || laser.first->position.x < -boardSize - 2 || laser.first->position.y > boardSize + 2 || laser.first->position.y < -boardSize - 2) {
                 lasers_.erase(lasers_.begin() + i);
                 laserSpeeds_.erase(laserSpeeds_.begin() + i);
-                scene->remove(*laser);
+                scene->remove(*laser.first);
                 i--;
             }
         }
     }
 
-    std::vector<std::shared_ptr<Object>>& getLasers(){
+    std::vector<std::pair<std::shared_ptr<Sprite>, std::shared_ptr<SpriteMaterial>>>& getLasers(){
         return lasers_;
     }
 
@@ -47,7 +47,8 @@ private:
     float laserSpeedX_ = 0;
     float laserSpeedY_ = 0;
     const float speedMultiplier_ = 40;
-    std::vector<std::shared_ptr<Object>> lasers_;
+    std::vector<std::pair<std::shared_ptr<Sprite>, std::shared_ptr<SpriteMaterial>>> lasers_;
     std::vector<std::pair<float, float>> laserSpeeds_;
+    Object Object3D;
 };
-#endif //PLACEHOLDER_LASERCONTROLS_HPP
+#endif //ASTROIDS_LASERCONTROLS_HPP

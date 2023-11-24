@@ -1,16 +1,22 @@
 #include "Controls.hpp"
 #include "Astroid.hpp"
 #include "Enemy.hpp"
+#include "CollitionDetection.hpp"
 #include <string>
+
 using namespace threepp;
 
 int main() {
 
     const float creationTime = 0.5;
     const int astroidsPerEnemy = 20;
-    int createdAstroidsCounter = 15;
+    int score = 0;
+    int createdAstroidsCounter = 0;
     double timePassed = creationTime + 1;
-    int boardSize = 35;
+    const int boardSize = 35;
+    const float astroidHitBox = 3;
+    const float laserHitBox = 2;
+    const float shipHitBox = 3.2;
     std::string text = "Score: 0";
     Object Object3D;
     Astroid astroid(boardSize);
@@ -24,10 +30,10 @@ int main() {
     std::shared_ptr<Scene> scene = Scene::create();
 
     Enemy enemy(scene, boardSize);
-    auto background = Object3D.createSprite("../textures/background.jpg", boardSize * 2, boardSize * 2).first;
+    auto background = Object3D.createSprite(boardSize * 2, boardSize * 2, "../textures/background.jpg").first;
     scene->add(background);
 
-    auto ship = Object3D.createSprite("../textures/Millenium Falcon.png", 5, 5);
+    auto ship = Object3D.createSprite(5, 5, "../textures/Millenium Falcon.png");
     scene->add(ship.first);
 
     Controls control(ship, scene, boardSize);
@@ -66,8 +72,14 @@ int main() {
         auto lasers = control.getLasars();
         auto enemyLasers = enemy.getLasars();
 
-        astroid.checkColison(lasers, ship.first, scene, enemy.getEnemyShips(), enemyLasers);
-        enemy.moveEnemy(lasers, ship.first, astroid.getAstroids(), astroid.getAstroidSpeeds(), control.getLaserSpeeds());
+        CollitionDetection::collitionChangeDirection(astroid.getAstroids(), astroid.getAstroidSpeeds(), astroidHitBox);
+        CollitionDetection::collitionDestroy(astroid.getAstroids(), enemy.getEnemyShips(), astroidHitBox, shipHitBox, scene);
+        CollitionDetection::collitionDestroy(enemyLasers, astroid.getAstroids(), laserHitBox, astroidHitBox, scene, &astroid.getAstroidSpeeds());
+        score += CollitionDetection::collitionDestroy(lasers, astroid.getAstroids(), laserHitBox, astroidHitBox, scene, &astroid.getAstroidSpeeds());
+        score = CollitionDetection::collitionDestroy(astroid.getAstroids(), ship, astroidHitBox, shipHitBox, score);
+        score += CollitionDetection::collitionDestroy(lasers, enemy.getEnemyShips(), laserHitBox, shipHitBox, scene);
+        CollitionDetection::collitionDestroy(enemyLasers, ship, laserHitBox, shipHitBox, score);
+        enemy.moveEnemy(ship.first, astroid.getAstroids(), astroid.getAstroidSpeeds());
 
         control.setDeltaTime(dt);
         enemy.setDt(dt);
@@ -75,7 +87,7 @@ int main() {
 
         renderer.render(*scene, *camera);
 
-        text = "Score: " + std::to_string(astroid.getScore());
+        text = "Score: " + std::to_string(score);
         textHandle.setText(text);
 
         renderer.resetState();

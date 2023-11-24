@@ -1,5 +1,5 @@
-#ifndef PLACEHOLDER_OBJECTCREATOR_HPP
-#define PLACEHOLDER_OBJECTCREATOR_HPP
+#ifndef ASTROIDS_OBJECTCREATOR_HPP
+#define ASTROIDS_OBJECTCREATOR_HPP
 
 #include "threepp/extras/imgui/ImguiContext.hpp"
 #include "threepp/threepp.hpp"
@@ -22,12 +22,14 @@ namespace {
             material_->color.copy(color);
         }
 
-        std::pair<std::shared_ptr<Sprite>, std::shared_ptr<SpriteMaterial>> createSprite(const std::string& texture, const float& sizeX, const float& sizeY, const float& sizeZ = 0){
+        std::pair<std::shared_ptr<Sprite>, std::shared_ptr<SpriteMaterial>> createSprite(const float& sizeX, const float& sizeY, const std::string& texture = ""){
             auto materialSprite = SpriteMaterial::create();
-            materialSprite->map = TextureLoader().load(texture);
-            materialSprite->map->offset.set(0.5, 0.5);
+            if (!texture.empty()) {
+                materialSprite->map = TextureLoader().load(texture);
+                materialSprite->map->offset.set(0.5, 0.5);
+            }
             auto sprite = Sprite::create(materialSprite);
-            sprite->scale.set(sizeX, sizeY, sizeZ);
+            sprite->scale.set(sizeX, sizeY, 0);
             return {sprite, materialSprite};
         }
 
@@ -37,4 +39,4 @@ namespace {
         std::shared_ptr<Mesh> mesh_;
     };
 }
-#endif //PLACEHOLDER_OBJECTCREATOR_HPP
+#endif //ASTROIDS_OBJECTCREATOR_HPP

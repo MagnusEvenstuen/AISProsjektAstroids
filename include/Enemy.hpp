@@ -1,5 +1,5 @@
-#ifndef PLACEHOLDER_ENEMY_HPP
-#define PLACEHOLDER_ENEMY_HPP
+#ifndef ASTROIDS_ENEMY_HPP
+#define ASTROIDS_ENEMY_HPP
 
 #include "ObjectCreator.hpp"
 #include "LaserControls.hpp"
@@ -8,11 +8,11 @@
 
 class Enemy {
 public:
-    Enemy(std::shared_ptr<Scene>& scene, int& boardSize) : scene_(scene), boardSize_(boardSize) {
+    Enemy(std::shared_ptr<Scene>& scene, const int& boardSize) : scene_(scene), boardSize_(boardSize) {
     }
     void createEnemy(){
-        for (int i = 0; i < 3; i++) {
-            auto enemyShip_ = Object3D.createSprite("../textures/Tie Fighter.png", 5, 5);
+        for (int i = 0; i < 2; i++) {
+            auto enemyShip_ = Object3D.createSprite(5, 5, "../textures/Tie Fighter.png");
 
             scene_->add(enemyShip_.first);
             enemyShips_.push_back(enemyShip_);
@@ -36,9 +36,8 @@ public:
         }
     }
 
-    void moveEnemy(const std::vector<std::shared_ptr<Object>>& lasers, const std::shared_ptr<Sprite>& ship,
-                   const std::vector<std::shared_ptr<Sprite>>& astroids, const std::vector<std::pair<float, float>>& astroidSpeeds,
-                   const std::vector<std::pair<float, float>>& laserSpeeds){
+    void moveEnemy(const std::shared_ptr<Sprite>& ship, const std::vector<std::pair<std::shared_ptr<Sprite>, std::shared_ptr<SpriteMaterial>>>& astroids,
+                   const std::vector<std::pair<float, float>>& astroidSpeeds){
         double turnScore = 0.5;
         if (shotTimer_.size() > enemyShips_.size()){
             int difference = shotTimer_.size() - enemyShips_.size();
@@ -57,8 +56,8 @@ public:
             for (int j = 0; j < astroids.size(); j++){
                 Vector2 directionAstroid(astroidSpeeds[j].first, astroidSpeeds[j].second);
                 directionAstroid = directionAstroid.normalize();
-                double astroidShipDistance = sqrt(pow(enemyShip.first->position.x - astroids[j]->position.x, 2) +
-                                                 pow(enemyShip.first->position.y - astroids[j]->position.y, 2)) / 2;
+                double astroidShipDistance = sqrt(pow(enemyShip.first->position.x - astroids[j].first->position.x, 2) +
+                                                 pow(enemyShip.first->position.y - astroids[j].first->position.y, 2)) / 2;
                 if (direction[0] + 0.4 > -directionAstroid[0] &&
                     direction[1] + 0.4 > -directionAstroid[1]){
                     turnScore += 0.8 / astroidShipDistance/4;
@@ -72,17 +71,6 @@ public:
                 } else if (directionEnemyShip[0] - 0.3 < -directionAstroid[0] &&
                            directionEnemyShip[1] - 0.3 < -directionAstroid[1]){
                     turnScore -= 0.8 / astroidShipDistance/4;
-                }
-            }
-            for (int j = 0; j < lasers.size(); j++){
-                Vector2 directionLaser(laserSpeeds[j].first, laserSpeeds[j].second);
-                directionLaser = directionLaser.normalize();
-                if (direction[0] + 0.1 > directionLaser[0] &&
-                    direction[1] + 0.1 > directionLaser[1]){
-                    turnScore += 0.3;
-                } else if (direction[0] - 0.1 < directionLaser[0] &&
-                           direction[1] - 0.1 < directionLaser[1]){
-                    turnScore -= 0.3;
                 }
             }
             if (turnScore >= 0.55){
@@ -120,7 +108,6 @@ public:
             }
             i += 1;
         }
-        i = 0;
         laserControls_.updateLasars(scene_, dt_, boardSize_);
     }
 
@@ -132,7 +119,7 @@ public:
         return enemyShips_;
     }
 
-    std::vector<std::shared_ptr<Object>>& getLasars(){
+    std::vector<std::pair<std::shared_ptr<Sprite>, std::shared_ptr<SpriteMaterial>>>& getLasars(){
         return laserControls_.getLasers();
     }
 
@@ -146,4 +133,4 @@ private:
     int boardSize_ = 0;
 };
 
-#endif //PLACEHOLDER_ENEMY_HPP
+#endif //ASTROIDS_ENEMY_HPP
