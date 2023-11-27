@@ -89,7 +89,8 @@ public:
                     enemyShip.second->rotation -= M_PI/180 * dt_ * 50;
                 }
                 if (shotTimer_[i] >= 0.4) {
-                    laserControls_.createLasar(scene_, enemyShip.first);
+                    laserControls_.setLaserSpeed(direction[0], direction[1]);
+                    laserControls_.createLaser(scene_, enemyShip.first);
                     shotTimer_[i] = 0;
                 }
             }
@@ -97,7 +98,6 @@ public:
             direction[1] = (sin(enemyShip.first->rotation.z()));
             enemyShip.first->position.x += 15 * dt_ * direction[0];
             enemyShip.first->position.y += 15 * dt_ * direction[1];
-            laserControls_.setLasarSpeed(direction[0], direction[1]);
             shotTimer_[i] += dt_;
             turnScore = 0.5;
             if (enemyShip.first->position.x >= boardSize_ + 2 || enemyShip.first->position.x <= -boardSize_ - 2){
@@ -108,7 +108,7 @@ public:
             }
             i += 1;
         }
-        laserControls_.updateLasars(scene_, dt_, boardSize_);
+        laserControls_.updateLasers(scene_, dt_, boardSize_);
     }
 
     void setDt (float dt){
@@ -125,7 +125,7 @@ public:
 
 private:
     std::shared_ptr<Scene> scene_;
-    Object Object3D;
+    ObjectCreator Object3D;
     LaserControls laserControls_;
     std::vector<std::pair<std::shared_ptr<Sprite>, std::shared_ptr<SpriteMaterial>>> enemyShips_;
     std::vector<float> shotTimer_;

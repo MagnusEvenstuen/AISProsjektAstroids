@@ -18,7 +18,7 @@ int main() {
     const float laserHitBox = 2;
     const float shipHitBox = 3.2;
     std::string text = "Score: 0";
-    Object Object3D;
+    ObjectCreator Object3D;
     Astroid astroid(boardSize);
 
     Canvas canvas("Astroids", {{"aa", 4}});
@@ -30,7 +30,7 @@ int main() {
     std::shared_ptr<Scene> scene = Scene::create();
 
     Enemy enemy(scene, boardSize);
-    auto background = Object3D.createSprite(boardSize * 2, boardSize * 2, "../textures/background.jpg").first;
+    auto background = Object3D.createSprite(boardSize * 2, boardSize * 2, "../textures/Background.jpg").first;
     scene->add(background);
 
     auto ship = Object3D.createSprite(5, 5, "../textures/Millenium Falcon.png");

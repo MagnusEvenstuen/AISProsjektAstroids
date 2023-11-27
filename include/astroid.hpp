@@ -4,26 +4,24 @@
 #include "ObjectCreator.hpp"
 #include <random>
 
-
 class Astroid{
 public:
     Astroid(const int& boardSize) : boardSize_(boardSize) {
     }
     void createAstroids(const std::shared_ptr<Scene>& scene){
+        std::random_device rd;
+        std::mt19937 gen(rd());
         for (int i = 0; i < 2; i++) {
             auto astroid = Object3D.createSprite(5, 5, "../textures/Astroid.png");
             astroids_.push_back(astroid);
 
             scene->add(astroid.first);
 
-            std::random_device rd;
-            std::mt19937 gen(rd());
             std::uniform_real_distribution<float> distribution(-1, 1);
-            std::bernoulli_distribution chooseAxis;
             std::bernoulli_distribution chooseSign;
 
             for (int j = 0; j < 4; j++) {
-                if (chooseAxis(gen)) {
+                if (chooseSign(gen)) {
                     astroid.first->position.x = chooseSign(gen) ? boardSize_ + 2 : -boardSize_ - 2;
                     astroid.first->position.y = distribution(gen) * boardSize_ + 2;
                 } else {
@@ -64,7 +62,7 @@ public:
 private:
     std::vector<std::pair<std::shared_ptr<Sprite>, std::shared_ptr<SpriteMaterial>>> astroids_;
     std::vector<std::pair<float, float>> astroidSpeeds_;
-    Object Object3D;
+    ObjectCreator Object3D;
     Scene scene_;
     int boardSize_;
     const int minSpeed_ = -20;

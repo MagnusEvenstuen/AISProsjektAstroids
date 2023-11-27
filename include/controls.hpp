@@ -27,7 +27,7 @@ namespace {
                 rotaition_ -= M_PI/180;
             }
             if (evt.key == Key::SPACE) {
-                laserControls_.createLasar(scene_, obj_.first);
+                laserControls_.createLaser(scene_, obj_.first);
             }
         }
         void onKeyReleased(const KeyEvent evt) override {
@@ -61,8 +61,8 @@ namespace {
             } else if (obj_.first->position.y > boardSize_ + 2 || obj_.first->position.y < -boardSize_ - 2){
                 obj_.first->position.y *= -0.9;
             }
-            laserControls_.setLasarSpeed(direction[0], direction[1]);
-            laserControls_.updateLasars(scene_, dt_, boardSize_);
+            laserControls_.setLaserSpeed(direction[0], direction[1]);
+            laserControls_.updateLasers(scene_, dt_, boardSize_);
         }
 
     private:

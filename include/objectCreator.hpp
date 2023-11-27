@@ -6,10 +6,10 @@
 
 using namespace threepp;
 namespace {
-    class Object : public Object3D {
+    class ObjectCreator : public Object3D {
 
     public:
-        Object() {
+        ObjectCreator() {
             geometry_ = SphereGeometry::create();
             material_ = MeshBasicMaterial::create();
             mesh_ = Mesh::create(geometry_, material_);

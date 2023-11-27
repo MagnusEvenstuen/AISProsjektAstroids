@@ -11,3 +11,5 @@ target_include_directories(Astroids PRIVATE include)
 target_include_directories(Astroids PRIVATE textures)
 
 target_link_libraries(Astroids PUBLIC threepp::threepp imgui::imgui)
+
+add_subdirectory(tests)

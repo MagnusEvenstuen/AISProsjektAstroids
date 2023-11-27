@@ -46,7 +46,7 @@ public:
 
 private:
     std::vector<float> yellow_;
-    Object Object3D;
+    ObjectCreator Object3D;
     Color explotionColor;
     std::vector<std::pair<std::shared_ptr<Sprite>, std::shared_ptr<SpriteMaterial>>> explotionParticles_;
     std::vector<std::pair<float, float>> explotionParticleSpeeds_;
