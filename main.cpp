@@ -39,6 +39,7 @@ int main() {
     Controls control(ship, scene, boardSize);
     canvas.addKeyListener(&control);
 
+    ExplotionCreator explotionCreator(scene);
 
     TextRenderer textRenderer;
     auto &textHandle = textRenderer.createHandle(text);
@@ -73,14 +74,16 @@ int main() {
         auto enemyLasers = enemy.getLasars();
 
         CollitionDetection::collitionChangeDirection(astroid.getAstroids(), astroid.getAstroidSpeeds(), astroidHitBox);
-        CollitionDetection::collitionDestroy(astroid.getAstroids(), enemy.getEnemyShips(), astroidHitBox, shipHitBox, scene);
-        CollitionDetection::collitionDestroy(enemyLasers, astroid.getAstroids(), laserHitBox, astroidHitBox, scene, &astroid.getAstroidSpeeds());
-        score += CollitionDetection::collitionDestroy(lasers, astroid.getAstroids(), laserHitBox, astroidHitBox, scene, &astroid.getAstroidSpeeds());
-        score = CollitionDetection::collitionDestroy(astroid.getAstroids(), ship, astroidHitBox, shipHitBox, score);
-        score += CollitionDetection::collitionDestroy(lasers, enemy.getEnemyShips(), laserHitBox, shipHitBox, scene);
-        CollitionDetection::collitionDestroy(enemyLasers, ship, laserHitBox, shipHitBox, score);
+        CollitionDetection::collitionDestroy(astroid.getAstroids(), enemy.getEnemyShips(), astroidHitBox, shipHitBox, scene, explotionCreator);
+        CollitionDetection::collitionDestroy(enemyLasers, astroid.getAstroids(), laserHitBox, astroidHitBox, scene, explotionCreator, &astroid.getAstroidSpeeds());
+        score += CollitionDetection::collitionDestroy(lasers, astroid.getAstroids(), laserHitBox, astroidHitBox, scene, explotionCreator, &astroid.getAstroidSpeeds());
+        score = CollitionDetection::collitionDestroy(astroid.getAstroids(), ship, astroidHitBox, shipHitBox, score, explotionCreator);
+        score += CollitionDetection::collitionDestroy(lasers, enemy.getEnemyShips(), laserHitBox, shipHitBox, scene, explotionCreator);
+        CollitionDetection::collitionDestroy(enemyLasers, ship, laserHitBox, shipHitBox, score, explotionCreator);
         enemy.moveEnemy(ship.first, astroid.getAstroids(), astroid.getAstroidSpeeds());
 
+
+        explotionCreator.moveExplotion(dt);
         control.setDeltaTime(dt);
         enemy.setDt(dt);
         control.setSpeed();

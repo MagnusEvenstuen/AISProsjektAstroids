@@ -1,6 +1,8 @@
 #ifndef ASTROIDS_COLLITIONDETECTION_HPP
 #define ASTROIDS_COLLITIONDETECTION_HPP
 
+#include "Explotion.hpp"
+
 class CollitionDetection {
 public:
     static void collitionChangeDirection(const std::vector<std::pair<std::shared_ptr<Sprite>, std::shared_ptr<SpriteMaterial>>>& objects, std::vector<std::pair<float, float>>& objectSpeeds, const float& objectHitBox){
@@ -33,24 +35,25 @@ public:
 
 
     static int collitionDestroy(const std::vector<std::pair<std::shared_ptr<Sprite>, std::shared_ptr<SpriteMaterial>>>& destroyers, std::vector<std::pair<std::shared_ptr<Sprite>, std::shared_ptr<SpriteMaterial>>>& destroyds,
-                          const float& destroyersHitBox, const float& destroydsHitBox, const std::shared_ptr<Scene>& scene, std::vector<std::pair<float, float>>* destroydSpeeds = nullptr){
+                          const float& destroyersHitBox, const float& destroydsHitBox, const std::shared_ptr<Scene>& scene, ExplotionCreator& explotionCreator, std::vector<std::pair<float, float>>* destroydSpeeds = nullptr){
         int index = 0;
         int scoreChange = 0;
         for (auto is = destroyers.begin(); is != destroyers.end(); is++) {
             auto& destroyer = *(is->first);
             for (auto ds = destroyds.begin(); ds != destroyds.end();) {
-                auto destroyed = *ds;
+                auto destroyd = *ds;
 
-                if (destroyed.first->position.x + destroydsHitBox > destroyer.position.x &&
-                    destroyed.first->position.x < destroyer.position.x + destroyersHitBox &&
-                    destroyed.first->position.y + destroydsHitBox > destroyer.position.y &&
-                    destroyed.first->position.y < destroyer.position.y + destroyersHitBox) {
+                if (destroyd.first->position.x + destroydsHitBox > destroyer.position.x &&
+                    destroyd.first->position.x < destroyer.position.x + destroyersHitBox &&
+                    destroyd.first->position.y + destroydsHitBox > destroyer.position.y &&
+                    destroyd.first->position.y < destroyer.position.y + destroyersHitBox) {
                     if (destroydSpeeds != nullptr){
                         destroydSpeeds->erase(destroydSpeeds->begin() + index);
                     }
                     scoreChange += 1;
-                    scene->remove(*destroyed.first);
+                    scene->remove(*destroyd.first);
                     ds = destroyds.erase(ds);
+                    explotionCreator.createExpolotion(destroyd.first->position.x, destroyd.first->position.y);
                 } else{
                     ds++;
                     index++;
@@ -62,7 +65,7 @@ public:
     }
 
     static int collitionDestroy(const std::vector<std::pair<std::shared_ptr<Sprite>, std::shared_ptr<SpriteMaterial>>>& destroyers, std::pair<std::shared_ptr<Sprite>, std::shared_ptr<SpriteMaterial>>& destroyd,
-                          const float& destroyersHitBox, const float& destroydsHitBox, int& score){
+                          const float& destroyersHitBox, const float& destroydsHitBox, int& score, ExplotionCreator& explotionCreator){
         for (auto is = destroyers.begin(); is != destroyers.end(); is++) {
             auto& destroyer = *(is->first);
 
@@ -70,6 +73,7 @@ public:
                 destroyd.first->position.x < destroyer.position.x + destroyersHitBox &&
                 destroyd.first->position.y + destroydsHitBox > destroyer.position.y &&
                 destroyd.first->position.y < destroyer.position.y + destroyersHitBox) {
+                explotionCreator.createExpolotion(destroyd.first->position.x, destroyd.first->position.y);
                 destroyd.first->position.x = 0;
                 destroyd.first->position.y = 0;
                 score = 0;
