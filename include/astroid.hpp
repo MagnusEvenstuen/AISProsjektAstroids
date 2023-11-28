@@ -35,14 +35,11 @@ public:
         }
     }
 
-    void updateAstroids(const std::shared_ptr<Scene>& scene, const float dt) {
+    void updateAstroids(std::shared_ptr<Scene>& scene, const float dt) {
         for (long long i = 0; i < astroids_.size(); i++) {
-            auto astroid = astroids_[i];
-            astroid.first->position.x += astroidSpeeds_[i].first * dt;
-            astroid.first->position.y += astroidSpeeds_[i].second * dt;
-
-            if (astroid.first->position.x > boardSize_ + 2 || astroid.first->position.x < -boardSize_ - 2 || astroid.first->position.y > boardSize_ + 2 || astroid.first->position.y < -boardSize_ - 2) {
-                scene->remove(*astroid.first);
+            ObjectUpdater::moveObject(astroids_[i].first, astroidSpeeds_[i], dt);
+            bool destroyAstroid = ObjectUpdater::destroyObject(astroids_[i].first, boardSize_, scene);
+            if (destroyAstroid) {
                 astroids_.erase(astroids_.begin() + i);
                 astroidSpeeds_.erase(astroidSpeeds_.begin() + i);
                 i--;
@@ -55,13 +52,13 @@ public:
         return astroids_;
     }
 
-    std::vector<std::pair<float, float>>& getAstroidSpeeds(){
+    std::vector<Vector2>& getAstroidSpeeds(){
         return astroidSpeeds_;
     }
 
 private:
     std::vector<std::pair<std::shared_ptr<Sprite>, std::shared_ptr<SpriteMaterial>>> astroids_;
-    std::vector<std::pair<float, float>> astroidSpeeds_;
+    std::vector<Vector2> astroidSpeeds_;
     ObjectCreator Object3D;
     Scene scene_;
     int boardSize_;

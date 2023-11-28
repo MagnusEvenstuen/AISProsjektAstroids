@@ -37,7 +37,7 @@ public:
     }
 
     void moveEnemy(const std::shared_ptr<Sprite>& ship, const std::vector<std::pair<std::shared_ptr<Sprite>, std::shared_ptr<SpriteMaterial>>>& astroids,
-                   const std::vector<std::pair<float, float>>& astroidSpeeds){
+                   const std::vector<Vector2>& astroidSpeeds){
         double turnScore = 0.5;
         if (shotTimer_.size() > enemyShips_.size()){
             int difference = shotTimer_.size() - enemyShips_.size();
@@ -54,7 +54,7 @@ public:
                                            enemyShip.first->position.y - ship->position.y);
             directionShipEnemyShip.normalize();
             for (int j = 0; j < astroids.size(); j++){
-                Vector2 directionAstroid(astroidSpeeds[j].first, astroidSpeeds[j].second);
+                Vector2 directionAstroid(astroidSpeeds[j].x, astroidSpeeds[j].y);
                 directionAstroid = directionAstroid.normalize();
                 double astroidShipDistance = sqrt(pow(enemyShip.first->position.x - astroids[j].first->position.x, 2) +
                                                  pow(enemyShip.first->position.y - astroids[j].first->position.y, 2)) / 2;
@@ -96,16 +96,12 @@ public:
             }
             direction[0] = (cos(enemyShip.first->rotation.z()));
             direction[1] = (sin(enemyShip.first->rotation.z()));
-            enemyShip.first->position.x += 15 * dt_ * direction[0];
-            enemyShip.first->position.y += 15 * dt_ * direction[1];
+
+            ObjectUpdater::moveObject(enemyShips_[i].first, direction, dt_, 15);
+            ObjectUpdater::loopObject(enemyShips_[i].first, boardSize_);
+
             shotTimer_[i] += dt_;
             turnScore = 0.5;
-            if (enemyShip.first->position.x >= boardSize_ + 2 || enemyShip.first->position.x <= -boardSize_ - 2){
-                enemyShip.first->position.x *= -0.9;
-            }
-            if (enemyShip.first->position.y >= boardSize_ + 2 || enemyShip.first->position.y <= -boardSize_ - 2){
-                enemyShip.first->position.y *= -0.9;
-            }
             i += 1;
         }
         laserControls_.updateLasers(scene_, dt_, boardSize_);

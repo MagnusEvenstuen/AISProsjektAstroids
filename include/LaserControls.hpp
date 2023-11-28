@@ -2,6 +2,7 @@
 #define ASTROIDS_LASERCONTROLS_HPP
 
 #include "ObjectCreator.hpp"
+#include "ObjectUpdater.hpp"
 
 using namespace threepp;
 namespace {
@@ -24,15 +25,14 @@ namespace {
         }
 
         void updateLasers(std::shared_ptr<Scene>& scene, const float dt, const int& boardSize) {
-            for (long long i = 0; i < lasers_.size(); i++) {//Modifisert ChatGPT kode
-                auto laser = lasers_[i];
-                laser.first->position.x += laserSpeeds_[i].first * dt * speedMultiplier_;
-                laser.first->position.y += laserSpeeds_[i].second * dt * speedMultiplier_;//Slutt modifisert ChatGPT kode
-                if (laser.first->position.x > boardSize + 2 || laser.first->position.x < -boardSize - 2 || laser.first->position.y > boardSize + 2 || laser.first->position.y < -boardSize - 2) {
+            for (long long i = 0; i < lasers_.size();) {
+                ObjectUpdater::moveObject(lasers_[i].first, laserSpeeds_[i], dt,speedMultiplier_);
+                bool destroyLaser = ObjectUpdater::destroyObject(lasers_[i].first, boardSize, scene);
+                if (destroyLaser) {
                     lasers_.erase(lasers_.begin() + i);
                     laserSpeeds_.erase(laserSpeeds_.begin() + i);
-                    scene->remove(*laser.first);
-                    i--;
+                } else {
+                    i++;
                 }
             }
         }
@@ -46,7 +46,7 @@ namespace {
         float laserSpeedY_ = 0;
         const float speedMultiplier_ = 60;
         std::vector<std::pair<std::shared_ptr<Sprite>, std::shared_ptr<SpriteMaterial>>> lasers_;
-        std::vector<std::pair<float, float>> laserSpeeds_;
+        std::vector<Vector2> laserSpeeds_;
         ObjectCreator Object3D;
     };
 }

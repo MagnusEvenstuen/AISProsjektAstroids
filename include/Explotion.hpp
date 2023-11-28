@@ -28,15 +28,13 @@ public:
     void moveExplotion(const float& dt){
         for (int i = 0; i < explotionParticles_.size(); i++) {
             yellow_[i] -= 1 * dt;
-            auto explotionParticle = explotionParticles_[i];
-            explotionParticle.first->position.x += explotionParticleSpeeds_[i].first * dt;
-            explotionParticle.first->position.y += explotionParticleSpeeds_[i].second * dt;
-            explotionParticle.first->scale.x -= 1 * dt;
-            explotionParticle.first->scale.y -= 1 * dt;
+            ObjectUpdater::moveObject(explotionParticles_[i].first, explotionParticleSpeeds_[i], dt);
+            explotionParticles_[i].first->scale.x -= 1 * dt;
+            explotionParticles_[i].first->scale.y -= 1 * dt;
             explotionColor = Color(1, yellow_[i], 0);
-            explotionParticle.second->color = explotionColor;
-            if (explotionParticle.first->scale.x < 0 || explotionParticle.first->scale.y < 0) {
-                scene_->remove(*explotionParticle.first);
+            explotionParticles_[i].second->color = explotionColor;
+            if (explotionParticles_[i].first->scale.x < 0 || explotionParticles_[i].first->scale.y < 0) {
+                scene_->remove(*explotionParticles_[i].first);
                 explotionParticles_.erase(explotionParticles_.begin() + i);
                 explotionParticleSpeeds_.erase(explotionParticleSpeeds_.begin() + i);
                 yellow_.erase(yellow_.begin() + i);
@@ -49,7 +47,7 @@ private:
     ObjectCreator Object3D;
     Color explotionColor;
     std::vector<std::pair<std::shared_ptr<Sprite>, std::shared_ptr<SpriteMaterial>>> explotionParticles_;
-    std::vector<std::pair<float, float>> explotionParticleSpeeds_;
+    std::vector<Vector2> explotionParticleSpeeds_;
     std::shared_ptr<Scene> scene_;
 };
 

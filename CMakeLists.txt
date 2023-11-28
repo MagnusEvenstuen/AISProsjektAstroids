@@ -6,7 +6,8 @@ set(CMAKE_CXX_STANDARD 17)
 find_package(threepp CONFIG REQUIRED)
 find_package(imgui CONFIG REQUIRED)
 
-add_executable(Astroids main.cpp)
+add_executable(Astroids main.cpp
+        include/ObjectUpdater.hpp)
 target_include_directories(Astroids PRIVATE include)
 target_include_directories(Astroids PRIVATE textures)
 

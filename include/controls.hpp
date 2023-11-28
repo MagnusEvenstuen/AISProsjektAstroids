@@ -54,13 +54,10 @@ namespace {
             obj_.second->rotation += rotaition_ * dt_ * 200;
             obj_.first->rotation.z += rotaition_ * dt_ * 200;
             Vector2 direction(cos(obj_.first->rotation.z()), sin(obj_.first->rotation.z()));
-            obj_.first->position.x += speed_ * dt_ * speedMultiplier_ * direction[0];
-            obj_.first->position.y += speed_ * dt_ * speedMultiplier_ * direction[1];
-            if (obj_.first->position.x > boardSize_ + 2 || obj_.first->position.x < -boardSize_ - 2){
-                obj_.first->position.x *= -0.9;
-            } else if (obj_.first->position.y > boardSize_ + 2 || obj_.first->position.y < -boardSize_ - 2){
-                obj_.first->position.y *= -0.9;
-            }
+
+            ObjectUpdater::moveObject(obj_.first, direction, dt_, speedMultiplier_ * speed_);
+            ObjectUpdater::loopObject(obj_.first, boardSize_);
+
             laserControls_.setLaserSpeed(direction[0], direction[1]);
             laserControls_.updateLasers(scene_, dt_, boardSize_);
         }

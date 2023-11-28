@@ -5,7 +5,7 @@
 
 class CollitionDetection {
 public:
-    static void collitionChangeDirection(const std::vector<std::pair<std::shared_ptr<Sprite>, std::shared_ptr<SpriteMaterial>>>& objects, std::vector<std::pair<float, float>>& objectSpeeds, const float& objectHitBox){
+    static void collitionChangeDirection(const std::vector<std::pair<std::shared_ptr<Sprite>, std::shared_ptr<SpriteMaterial>>>& objects, std::vector<Vector2>& objectSpeeds, const float& objectHitBox){
         for (auto is = objects.begin(); is != objects.end(); ++is) {
             auto& astroid = *(is->first);
             for (int i = 0; i < objects.size(); i++) {
@@ -19,13 +19,13 @@ public:
                         Vector2 collisonDirection(objects[i].first->position.x - objects[std::distance(objects.begin(), is)].first->position.x,
                                                   objects[i].first->position.y - objects[std::distance(objects.begin(), is)].first->position.y);
                         collisonDirection.normalize();
-                        Vector2 speedI(objectSpeeds[i].first, objectSpeeds[i].second);
-                        Vector2 speedAS(objectSpeeds[std::distance(objects.begin(), is)].first,
-                                        objectSpeeds[std::distance(objects.begin(), is)].second);
-                        objectSpeeds[i].first = speedAS.length() * collisonDirection[0];
-                        objectSpeeds[i].second = speedAS.length() * collisonDirection[1];
-                        objectSpeeds[std::distance(objects.begin(), is)].first = speedI.length() * -collisonDirection[0];
-                        objectSpeeds[std::distance(objects.begin(), is)].second = speedI.length() * -collisonDirection[1];
+                        Vector2 speedI(objectSpeeds[i].x, objectSpeeds[i].y);
+                        Vector2 speedAS(objectSpeeds[std::distance(objects.begin(), is)].x,
+                                        objectSpeeds[std::distance(objects.begin(), is)].y);
+                        objectSpeeds[i].x = speedAS.length() * collisonDirection[0];
+                        objectSpeeds[i].y = speedAS.length() * collisonDirection[1];
+                        objectSpeeds[std::distance(objects.begin(), is)].x = speedI.length() * -collisonDirection[0];
+                        objectSpeeds[std::distance(objects.begin(), is)].y = speedI.length() * -collisonDirection[1];
                     }
                 }
             }
@@ -35,7 +35,7 @@ public:
 
 
     static int collitionDestroy(const std::vector<std::pair<std::shared_ptr<Sprite>, std::shared_ptr<SpriteMaterial>>>& destroyers, std::vector<std::pair<std::shared_ptr<Sprite>, std::shared_ptr<SpriteMaterial>>>& destroyds,
-                          const float& destroyersHitBox, const float& destroydsHitBox, const std::shared_ptr<Scene>& scene, ExplotionCreator& explotionCreator, std::vector<std::pair<float, float>>* destroydSpeeds = nullptr){
+                          const float& destroyersHitBox, const float& destroydsHitBox, const std::shared_ptr<Scene>& scene, ExplotionCreator& explotionCreator, std::vector<Vector2>* destroydSpeeds = nullptr){
         int index = 0;
         int scoreChange = 0;
         for (auto is = destroyers.begin(); is != destroyers.end(); is++) {
