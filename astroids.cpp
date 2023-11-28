@@ -1,6 +1,7 @@
 #include "Controls.hpp"
 #include "Astroid.hpp"
 #include "Enemy.hpp"
+#include "Game.hpp"
 #include "CollitionDetection.hpp"
 #include <string>
 
@@ -30,11 +31,8 @@ int main() {
     std::shared_ptr<Scene> scene = Scene::create();
 
     Enemy enemy(scene, boardSize);
-    auto background = Object3D.createSprite(boardSize * 2, boardSize * 2, "../textures/Background.jpg").first;
-    scene->add(background);
 
-    auto ship = Object3D.createSprite(5, 5, "../textures/Millenium Falcon.png");
-    scene->add(ship.first);
+    auto ship = Game::startGame("../textures/Background.jpg", "../textures/Millenium Falcon.png", scene, boardSize);
 
     Controls control(ship, scene, boardSize);
     canvas.addKeyListener(&control);
@@ -70,18 +68,25 @@ int main() {
 
         astroid.updateAstroids(scene, dt);
 
-        auto lasers = control.getLasars();
+        auto lasers = control.getLasers();
         auto enemyLasers = enemy.getLasars();
 
+        enemy.moveEnemy(ship.first, astroid.getAstroids(), astroid.getAstroidSpeeds());
         CollitionDetection::collitionChangeDirection(astroid.getAstroids(), astroid.getAstroidSpeeds(), astroidHitBox);
         CollitionDetection::collitionDestroy(astroid.getAstroids(), enemy.getEnemyShips(), astroidHitBox, shipHitBox, scene, explotionCreator);
         CollitionDetection::collitionDestroy(enemyLasers, astroid.getAstroids(), laserHitBox, astroidHitBox, scene, explotionCreator, &astroid.getAstroidSpeeds());
         score += CollitionDetection::collitionDestroy(lasers, astroid.getAstroids(), laserHitBox, astroidHitBox, scene, explotionCreator, &astroid.getAstroidSpeeds());
-        score = CollitionDetection::collitionDestroy(astroid.getAstroids(), ship, astroidHitBox, shipHitBox, score, explotionCreator);
         score += CollitionDetection::collitionDestroy(lasers, enemy.getEnemyShips(), laserHitBox, shipHitBox, scene, explotionCreator);
-        CollitionDetection::collitionDestroy(enemyLasers, ship, laserHitBox, shipHitBox, score, explotionCreator);
-        enemy.moveEnemy(ship.first, astroid.getAstroids(), astroid.getAstroidSpeeds());
+        score = CollitionDetection::collitionDestroy(enemyLasers, ship, laserHitBox, shipHitBox, score, explotionCreator);
+        if (ship.first != nullptr) {
+            score = CollitionDetection::collitionDestroy(astroid.getAstroids(), ship, astroidHitBox, shipHitBox, score, explotionCreator);
+        }
 
+        if (ship.first == nullptr){
+            lasers.insert(lasers.end(), enemyLasers.begin(), enemyLasers.end());
+            Game::resetGame(scene, lasers, astroid.getAstroidSpeeds(), astroid.getAstroids(), enemy.getEnemyShips());
+            ship = Game::startGame("../textures/Background.jpg", "../textures/Millenium Falcon.png", scene, boardSize);
+        }
 
         explotionCreator.moveExplotion(dt);
         control.setDeltaTime(dt);

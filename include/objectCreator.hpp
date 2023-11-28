@@ -17,12 +17,7 @@ namespace {
             add(mesh_);
         }
 
-        void setColor(const Color &color) {
-
-            material_->color.copy(color);
-        }
-
-        std::pair<std::shared_ptr<Sprite>, std::shared_ptr<SpriteMaterial>> createSprite(const float& sizeX, const float& sizeY, const std::string& texture = ""){
+        static std::pair<std::shared_ptr<Sprite>, std::shared_ptr<SpriteMaterial>> createSprite(const float& sizeX, const float& sizeY, const std::string& texture = ""){
             auto materialSprite = SpriteMaterial::create();
             if (!texture.empty()) {
                 materialSprite->map = TextureLoader().load(texture);

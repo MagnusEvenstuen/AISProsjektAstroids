@@ -34,6 +34,9 @@ namespace {
                 } else {
                     i++;
                 }
+                if (lasers_.size() > laserSpeeds_.size()){
+                    laserSpeeds_.resize(lasers_.size());
+                }
             }
         }
 

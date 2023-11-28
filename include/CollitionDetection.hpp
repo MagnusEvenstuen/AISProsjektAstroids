@@ -2,6 +2,8 @@
 #define ASTROIDS_COLLITIONDETECTION_HPP
 
 #include "Explotion.hpp"
+#include "ObjectCreator.hpp"
+#include "Game.hpp"
 
 class CollitionDetection {
 public:
@@ -73,9 +75,8 @@ public:
                 destroyd.first->position.x < destroyer.position.x + destroyersHitBox &&
                 destroyd.first->position.y + destroydsHitBox > destroyer.position.y &&
                 destroyd.first->position.y < destroyer.position.y + destroyersHitBox) {
-                explotionCreator.createExpolotion(destroyd.first->position.x, destroyd.first->position.y);
-                destroyd.first->position.x = 0;
-                destroyd.first->position.y = 0;
+                destroyd.first = nullptr;
+                destroyd.second = nullptr;
                 score = 0;
                 return score;
             }
