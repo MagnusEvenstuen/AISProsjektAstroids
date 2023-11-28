@@ -7,7 +7,7 @@
 
 class CollitionDetection {
 public:
-    static void collitionChangeDirection(const std::vector<std::pair<std::shared_ptr<Sprite>, std::shared_ptr<SpriteMaterial>>>& objects, std::vector<Vector2>& objectSpeeds, const float& objectHitBox){
+    static void collitionChangeDirection(const std::vector<std::pair<std::shared_ptr<Sprite>, std::shared_ptr<SpriteMaterial>>>& objects, std::vector<Vector2>& objectSpeeds, const float& objectHitBox, std::vector<float>& objectRotations){
         for (auto is = objects.begin(); is != objects.end(); ++is) {
             auto& astroid = *(is->first);
             for (int i = 0; i < objects.size(); i++) {
@@ -28,6 +28,9 @@ public:
                         objectSpeeds[i].y = speedAS.length() * collisonDirection[1];
                         objectSpeeds[std::distance(objects.begin(), is)].x = speedI.length() * -collisonDirection[0];
                         objectSpeeds[std::distance(objects.begin(), is)].y = speedI.length() * -collisonDirection[1];
+                        float objectRotation = objectRotations[i];
+                        objectRotations[i] = objectRotations[std::distance(objects.begin(), is)];
+                        objectRotations[std::distance(objects.begin(), is)] = objectRotation;
                     }
                 }
             }
@@ -37,7 +40,7 @@ public:
 
 
     static int collitionDestroy(const std::vector<std::pair<std::shared_ptr<Sprite>, std::shared_ptr<SpriteMaterial>>>& destroyers, std::vector<std::pair<std::shared_ptr<Sprite>, std::shared_ptr<SpriteMaterial>>>& destroyds,
-                          const float& destroyersHitBox, const float& destroydsHitBox, const std::shared_ptr<Scene>& scene, ExplotionCreator& explotionCreator, std::vector<Vector2>* destroydSpeeds = nullptr){
+                          const float& destroyersHitBox, const float& destroydsHitBox, const std::shared_ptr<Scene>& scene, ExplotionCreator& explotionCreator, std::vector<Vector2>* destroydSpeeds = nullptr, std::vector<float>* destroyedRotation = {}){
         int index = 0;
         int scoreChange = 0;
         for (auto is = destroyers.begin(); is != destroyers.end(); is++) {
@@ -51,6 +54,9 @@ public:
                     destroyd.first->position.y < destroyer.position.y + destroyersHitBox) {
                     if (destroydSpeeds != nullptr){
                         destroydSpeeds->erase(destroydSpeeds->begin() + index);
+                        if (!destroyedRotation->empty()){
+                            destroyedRotation->erase((destroyedRotation->begin() + index));
+                        }
                     }
                     scoreChange += 1;
                     scene->remove(*destroyd.first);

@@ -42,7 +42,7 @@ namespace {
             }
         }
 
-        std::vector<std::pair<std::shared_ptr<Sprite>, std::shared_ptr<SpriteMaterial>>>& getLasars(){
+        std::vector<std::pair<std::shared_ptr<Sprite>, std::shared_ptr<SpriteMaterial>>>& getLasers(){
             return laserControls_.getLasers();
         }
 

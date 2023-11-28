@@ -10,6 +10,10 @@ void Astroid::createAstroids(const std::shared_ptr<Scene>& scene) {
         auto astroid = Object3D.createSprite(5, 5, "../textures/Astroid.png");
         astroids_.push_back(astroid);
 
+        std::uniform_real_distribution<float> rotation(0, 2*3.14159265);
+        float randomRotation = rotation(gen);
+        astroidRotation_.push_back(randomRotation);
+
         scene->add(astroid.first);
 
         std::uniform_real_distribution<float> distribution(-1, 1);
@@ -29,20 +33,32 @@ void Astroid::createAstroids(const std::shared_ptr<Scene>& scene) {
         astroidSpeeds_.emplace_back(speedDistribution(gen), speedDistribution(gen));   //Slutt kode fra ChatGPT
     }
 }
+
 void Astroid::updateAstroids(std::shared_ptr<Scene>& scene, const float dt) {
     for (long long i = 0; i < astroids_.size(); i++) {
-        ObjectUpdater::moveObject(astroids_[i].first, astroidSpeeds_[i], dt);
+        ObjectUpdater::moveObject(astroids_[i], astroidSpeeds_[i], astroidRotation_[i], dt);
+
         bool destroyAstroid = ObjectUpdater::destroyObject(astroids_[i].first, boardSize_, scene);
         if (destroyAstroid) {
             astroids_.erase(astroids_.begin() + i);
             astroidSpeeds_.erase(astroidSpeeds_.begin() + i);
+            astroidRotation_.erase(astroidRotation_.begin() + i);
             i--;
+        }
+        if (astroids_.size() > astroidRotation_.size()){
+            astroidRotation_.resize(astroids_.size());
         }
     }
 }
+
 std::vector<std::pair<std::shared_ptr<Sprite>, std::shared_ptr<SpriteMaterial>>>& Astroid::getAstroids() {
     return astroids_;
 }
+
 std::vector<Vector2>& Astroid::getAstroidSpeeds() {
     return astroidSpeeds_;
+}
+
+std::vector<float>& Astroid::getAstroidRotationSpeeds() {
+    return astroidRotation_;
 }

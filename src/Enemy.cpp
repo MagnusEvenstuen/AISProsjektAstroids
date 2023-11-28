@@ -13,9 +13,9 @@ void Enemy::createEnemy() {
 
         std::random_device rd;
         std::mt19937 gen(rd());
-        std::uniform_real_distribution<float> yPosStart(-30, 30);
+        std::uniform_real_distribution<float> yPosStart(-boardSize_, boardSize_);
 
-        enemyShip_.first->position.x = -30;
+        enemyShip_.first->position.x = -boardSize_;
         enemyShip_.first->position.y = yPosStart(gen);
     }
 }

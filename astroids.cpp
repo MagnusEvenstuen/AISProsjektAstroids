@@ -14,7 +14,7 @@ int main() {
     int score = 0;
     int createdAstroidsCounter = 0;
     double timePassed = creationTime + 1;
-    const int boardSize = 35;
+    const int boardSize = 50;
     const float astroidHitBox = 3;
     const float laserHitBox = 2;
     const float shipHitBox = 3.2;
@@ -72,10 +72,10 @@ int main() {
         auto enemyLasers = enemy.getLasars();
 
         enemy.moveEnemy(ship.first, astroid.getAstroids(), astroid.getAstroidSpeeds());
-        CollitionDetection::collitionChangeDirection(astroid.getAstroids(), astroid.getAstroidSpeeds(), astroidHitBox);
+        CollitionDetection::collitionChangeDirection(astroid.getAstroids(), astroid.getAstroidSpeeds(), astroidHitBox, astroid.getAstroidRotationSpeeds());
         CollitionDetection::collitionDestroy(astroid.getAstroids(), enemy.getEnemyShips(), astroidHitBox, shipHitBox, scene, explotionCreator);
-        CollitionDetection::collitionDestroy(enemyLasers, astroid.getAstroids(), laserHitBox, astroidHitBox, scene, explotionCreator, &astroid.getAstroidSpeeds());
-        score += CollitionDetection::collitionDestroy(lasers, astroid.getAstroids(), laserHitBox, astroidHitBox, scene, explotionCreator, &astroid.getAstroidSpeeds());
+        CollitionDetection::collitionDestroy(enemyLasers, astroid.getAstroids(), laserHitBox, astroidHitBox, scene, explotionCreator, &astroid.getAstroidSpeeds(), &astroid.getAstroidRotationSpeeds());
+        score += CollitionDetection::collitionDestroy(lasers, astroid.getAstroids(), laserHitBox, astroidHitBox, scene, explotionCreator, &astroid.getAstroidSpeeds(), &astroid.getAstroidRotationSpeeds());
         score += CollitionDetection::collitionDestroy(lasers, enemy.getEnemyShips(), laserHitBox, shipHitBox, scene, explotionCreator);
         score = CollitionDetection::collitionDestroy(enemyLasers, ship, laserHitBox, shipHitBox, score, explotionCreator);
         if (ship.first != nullptr) {
