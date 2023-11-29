@@ -14,7 +14,7 @@ int main() {
     int score = 0;
     int createdAstroidsCounter = 0;
     double timePassed = creationTime + 1;
-    const int boardSize = 50;
+    const int boardSize = 35;
     const float astroidHitBox = 3;
     const float laserHitBox = 2;
     const float shipHitBox = 3.2;
@@ -50,9 +50,11 @@ int main() {
         renderer.setSize(size);
         textHandle.setPosition(0, size.height);
     });
-
+    int c = 0;
     Clock clock;
+    clock.start();
     canvas.animate([&] {
+        c++;
         auto dt = clock.getDelta();
         timePassed += dt;
 
@@ -69,22 +71,22 @@ int main() {
         astroid.updateAstroids(scene, dt);
 
         auto lasers = control.getLasers();
-        auto enemyLasers = enemy.getLasars();
+        auto enemyLasers = enemy.getLasers();
 
-        enemy.moveEnemy(ship.first, astroid.getAstroids(), astroid.getAstroidSpeeds());
-        CollitionDetection::collitionChangeDirection(astroid.getAstroids(), astroid.getAstroidSpeeds(), astroidHitBox, astroid.getAstroidRotationSpeeds());
+        //enemy.moveEnemy(ship.first, astroid.getAstroids(), astroid.getAstroidSpeeds());
+        CollitionDetection::collitionChangeDirection(astroid.getAstroids(), astroid.getAstroidSpeeds(), astroidHitBox, astroid.getAstroidRotationSpeeds(), astroid.getAstroidSize());
         CollitionDetection::collitionDestroy(astroid.getAstroids(), enemy.getEnemyShips(), astroidHitBox, shipHitBox, scene, explotionCreator);
         CollitionDetection::collitionDestroy(enemyLasers, astroid.getAstroids(), laserHitBox, astroidHitBox, scene, explotionCreator, &astroid.getAstroidSpeeds(), &astroid.getAstroidRotationSpeeds());
         score += CollitionDetection::collitionDestroy(lasers, astroid.getAstroids(), laserHitBox, astroidHitBox, scene, explotionCreator, &astroid.getAstroidSpeeds(), &astroid.getAstroidRotationSpeeds());
         score += CollitionDetection::collitionDestroy(lasers, enemy.getEnemyShips(), laserHitBox, shipHitBox, scene, explotionCreator);
-        score = CollitionDetection::collitionDestroy(enemyLasers, ship, laserHitBox, shipHitBox, score, explotionCreator);
+        //score = CollitionDetection::collitionDestroy(enemyLasers, ship, laserHitBox, shipHitBox, score, explotionCreator);
         if (ship.first != nullptr) {
-            score = CollitionDetection::collitionDestroy(astroid.getAstroids(), ship, astroidHitBox, shipHitBox, score, explotionCreator);
+            //score = CollitionDetection::collitionDestroy(astroid.getAstroids(), ship, astroidHitBox, shipHitBox, score, explotionCreator);
         }
 
         if (ship.first == nullptr){
-            lasers.insert(lasers.end(), enemyLasers.begin(), enemyLasers.end());
-            Game::resetGame(scene, lasers, astroid.getAstroidSpeeds(), astroid.getAstroids(), enemy.getEnemyShips());
+            Game::resetGame(scene, lasers, enemyLasers,
+                            astroid.getAstroidSpeeds(), astroid.getAstroids(), enemy.getEnemyShips());
             ship = Game::startGame("../textures/Background.jpg", "../textures/Millenium Falcon.png", scene, boardSize);
         }
 
@@ -97,8 +99,8 @@ int main() {
 
         text = "Score: " + std::to_string(score);
         textHandle.setText(text);
-
         renderer.resetState();
         textRenderer.render();
     });
+    std::cout << c/clock.elapsedTime << std::endl;
 }

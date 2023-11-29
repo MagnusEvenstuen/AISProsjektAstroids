@@ -19,7 +19,7 @@ public:
 
     std::vector<std::pair<std::shared_ptr<Sprite>, std::shared_ptr<SpriteMaterial>>>& getEnemyShips();
 
-    std::vector<std::pair<std::shared_ptr<Sprite>, std::shared_ptr<SpriteMaterial>>>& getLasars();
+    std::vector<std::pair<std::shared_ptr<Sprite>, std::shared_ptr<SpriteMaterial>>>& getLasers();
 
 private:
     std::shared_ptr<Scene> scene_;

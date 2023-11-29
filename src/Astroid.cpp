@@ -7,12 +7,13 @@ void Astroid::createAstroids(const std::shared_ptr<Scene>& scene) {
     std::random_device rd;
     std::mt19937 gen(rd());
     for (int i = 0; i < 2; i++) {
-        auto astroid = Object3D.createSprite(5, 5, "../textures/Astroid.png");
+        std::uniform_real_distribution<float> size(3, 10);
+        astroidSize_.push_back(size(gen));
+        auto astroid = Object3D.createSprite(astroidSize_.back(), astroidSize_.back(), "../textures/Astroid.png");
         astroids_.push_back(astroid);
 
         std::uniform_real_distribution<float> rotation(0, 2*3.14159265);
-        float randomRotation = rotation(gen);
-        astroidRotation_.push_back(randomRotation);
+        astroidRotation_.push_back(rotation(gen));
 
         scene->add(astroid.first);
 
@@ -43,6 +44,7 @@ void Astroid::updateAstroids(std::shared_ptr<Scene>& scene, const float dt) {
             astroids_.erase(astroids_.begin() + i);
             astroidSpeeds_.erase(astroidSpeeds_.begin() + i);
             astroidRotation_.erase(astroidRotation_.begin() + i);
+            astroidSize_.erase(astroidSize_.begin() + i);
             i--;
         }
         if (astroids_.size() > astroidRotation_.size()){
@@ -61,4 +63,8 @@ std::vector<Vector2>& Astroid::getAstroidSpeeds() {
 
 std::vector<float>& Astroid::getAstroidRotationSpeeds() {
     return astroidRotation_;
+}
+
+std::vector<float>& Astroid::getAstroidSize() {
+    return astroidSize_;
 }

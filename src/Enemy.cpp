@@ -98,6 +98,6 @@ std::vector<std::pair<std::shared_ptr<Sprite>, std::shared_ptr<SpriteMaterial>>>
     return enemyShips_;
 }
 
-std::vector<std::pair<std::shared_ptr<Sprite>, std::shared_ptr<SpriteMaterial>>>& Enemy::getLasars() {
+std::vector<std::pair<std::shared_ptr<Sprite>, std::shared_ptr<SpriteMaterial>>>& Enemy::getLasers() {
     return laserControls_.getLasers();
 }

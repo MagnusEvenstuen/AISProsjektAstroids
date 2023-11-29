@@ -16,9 +16,15 @@ public:
 
     std::vector<Vector2>& getAstroidSpeeds();
 
+    std::vector<float>& getAstroidRotationSpeeds();
+
+    std::vector<float>& getAstroidSize();
+
 private:
     std::vector<std::pair<std::shared_ptr<Sprite>, std::shared_ptr<SpriteMaterial>>> astroids_;
     std::vector<Vector2> astroidSpeeds_;
+    std::vector<float> astroidRotation_;
+    std::vector<float> astroidSize_;
     ObjectCreator Object3D;
     Scene scene_;
     int boardSize_;
