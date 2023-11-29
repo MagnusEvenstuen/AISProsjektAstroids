@@ -15,18 +15,17 @@ int main() {
     int createdAstroidsCounter = 0;
     double timePassed = creationTime + 1;
     const int boardSize = 35;
-    const float astroidHitBox = 3;
     const float laserHitBox = 2;
     const float shipHitBox = 3.2;
     std::string text = "Score: 0";
     ObjectCreator Object3D;
     Astroid astroid(boardSize);
 
-    Canvas canvas("Astroids", {{"aa", 4}});
+    Canvas canvas("Astroids", {{"aa",4}});
     GLRenderer renderer(canvas.size());
 
     const auto camera = OrthographicCamera::create(-boardSize, boardSize, boardSize, -boardSize);
-    camera->position.z = 50;
+    camera -> position.z = 50;
 
     std::shared_ptr<Scene> scene = Scene::create();
 
@@ -35,34 +34,34 @@ int main() {
     auto ship = Game::startGame("../textures/Background.jpg", "../textures/Millenium Falcon.png", scene, boardSize);
 
     Controls control(ship, scene, boardSize);
-    canvas.addKeyListener(&control);
+    canvas.addKeyListener( & control);
 
     ExplotionCreator explotionCreator(scene);
 
     TextRenderer textRenderer;
-    auto &textHandle = textRenderer.createHandle(text);
+    auto & textHandle = textRenderer.createHandle(text);
     textHandle.verticalAlignment = threepp::TextHandle::VerticalAlignment::BOTTOM;
     textHandle.setPosition(0, canvas.size().height);
     textHandle.scale = 2;
 
-    canvas.onWindowResize([&](WindowSize size) {
-        camera->updateProjectionMatrix();
+    canvas.onWindowResize([ & ](WindowSize size) {
+        camera -> updateProjectionMatrix();
         renderer.setSize(size);
         textHandle.setPosition(0, size.height);
     });
     int c = 0;
     Clock clock;
     clock.start();
-    canvas.animate([&] {
+    canvas.animate([ & ] {
         c++;
         auto dt = clock.getDelta();
         timePassed += dt;
 
-        if (timePassed > creationTime){
+        if (timePassed > creationTime) {
             astroid.createAstroids(scene);
             timePassed -= creationTime;
             createdAstroidsCounter += 1;
-            if (createdAstroidsCounter >= astroidsPerEnemy){
+            if (createdAstroidsCounter >= astroidsPerEnemy) {
                 enemy.createEnemy();
                 createdAstroidsCounter = 0;
             }
@@ -73,20 +72,19 @@ int main() {
         auto lasers = control.getLasers();
         auto enemyLasers = enemy.getLasers();
 
-        //enemy.moveEnemy(ship.first, astroid.getAstroids(), astroid.getAstroidSpeeds());
-        CollitionDetection::collitionChangeDirection(astroid.getAstroids(), astroid.getAstroidSpeeds(), astroidHitBox, astroid.getAstroidRotationSpeeds(), astroid.getAstroidSize());
-        CollitionDetection::collitionDestroy(astroid.getAstroids(), enemy.getEnemyShips(), astroidHitBox, shipHitBox, scene, explotionCreator);
-        CollitionDetection::collitionDestroy(enemyLasers, astroid.getAstroids(), laserHitBox, astroidHitBox, scene, explotionCreator, &astroid.getAstroidSpeeds(), &astroid.getAstroidRotationSpeeds());
-        score += CollitionDetection::collitionDestroy(lasers, astroid.getAstroids(), laserHitBox, astroidHitBox, scene, explotionCreator, &astroid.getAstroidSpeeds(), &astroid.getAstroidRotationSpeeds());
-        score += CollitionDetection::collitionDestroy(lasers, enemy.getEnemyShips(), laserHitBox, shipHitBox, scene, explotionCreator);
-        //score = CollitionDetection::collitionDestroy(enemyLasers, ship, laserHitBox, shipHitBox, score, explotionCreator);
+        enemy.moveEnemy(ship.first, astroid.getAstroids(), astroid.getAstroidSpeeds());
+        CollitionDetection::collitionChangeDirection(astroid.getAstroids(), astroid.getAstroidSpeeds(), astroid.getAstroidRotationSpeeds(), astroid.getAstroidSize());
+        CollitionDetection::collitionDestroy(astroid.getAstroids(), enemy.getEnemyShips(), astroid.getAstroidSize(), scene, explotionCreator);
+        CollitionDetection::collitionDestroy(enemyLasers, astroid.getAstroids(), astroid.getAstroidSize(), scene, explotionCreator, & astroid.getAstroidSpeeds(), & astroid.getAstroidRotationSpeeds());
+        score += CollitionDetection::collitionDestroy(lasers, astroid.getAstroids(), astroid.getAstroidSize(), scene, explotionCreator, & astroid.getAstroidSpeeds(), & astroid.getAstroidRotationSpeeds());
+        score += CollitionDetection::collitionDestroy(lasers, enemy.getEnemyShips(), shipHitBox, scene, explotionCreator);
+        score = CollitionDetection::collitionDestroy(enemyLasers, ship, laserHitBox, score);
         if (ship.first != nullptr) {
-            //score = CollitionDetection::collitionDestroy(astroid.getAstroids(), ship, astroidHitBox, shipHitBox, score, explotionCreator);
+            score = CollitionDetection::collitionDestroy(astroid.getAstroids(), ship, astroid.getAstroidSize(), score);
         }
 
-        if (ship.first == nullptr){
-            Game::resetGame(scene, lasers, enemyLasers,
-                            astroid.getAstroidSpeeds(), astroid.getAstroids(), enemy.getEnemyShips());
+        if (ship.first == nullptr) {
+            Game::resetGame(scene, lasers, enemyLasers, astroid.getAstroidSpeeds(), astroid.getAstroids(), enemy.getEnemyShips());
             ship = Game::startGame("../textures/Background.jpg", "../textures/Millenium Falcon.png", scene, boardSize);
         }
 
@@ -95,12 +93,12 @@ int main() {
         enemy.setDt(dt);
         control.setSpeed();
 
-        renderer.render(*scene, *camera);
+        renderer.render( * scene, * camera);
 
         text = "Score: " + std::to_string(score);
         textHandle.setText(text);
         renderer.resetState();
         textRenderer.render();
     });
-    std::cout << c/clock.elapsedTime << std::endl;
+    std::cout << c / clock.elapsedTime << std::endl;
 }
