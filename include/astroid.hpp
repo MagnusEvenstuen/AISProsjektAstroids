@@ -1,7 +1,9 @@
 #ifndef ASTROIDS_ASTROID_HPP
 #define ASTROIDS_ASTROID_HPP
 
-#include "ObjectCreator.hpp"
+#include "threepp/threepp.hpp"
+
+using namespace threepp;
 
 class Astroid{
 public:
@@ -25,7 +27,6 @@ private:
     std::vector<Vector2> astroidSpeeds_;
     std::vector<float> astroidRotation_;
     std::vector<float> astroidSize_;
-    ObjectCreator Object3D;
     Scene scene_;
     int boardSize_;
     const int minSpeed_ = -20;

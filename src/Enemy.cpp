@@ -1,7 +1,8 @@
 #define _USE_MATH_DEFINES
 
 #include "Enemy.hpp"
-#include <cmath>
+#include "ObjectUpdater.hpp"
+#include <random>
 
 void Enemy::createEnemy() {
     for (int i = 0; i < 2; i++) {

@@ -1,7 +1,9 @@
 #ifndef ASTROIDS_OBJECTUPDATER_HPP
 #define ASTROIDS_OBJECTUPDATER_HPP
 
-#include "ObjectCreator.hpp"
+#include "threepp/threepp.hpp"
+
+using namespace threepp;
 
 class ObjectUpdater {
 public:
@@ -10,11 +12,7 @@ public:
                            const float speedMultiplyer = 1);
 
     static void moveObject(const std::pair<std::shared_ptr<Sprite>, std::shared_ptr<SpriteMaterial>>& object,
-                           Vector2& objectSpeeds, const float& objectRotation, const float& dt, const float& speedMultiplyer = 1) {
-        object.first -> position.x += objectSpeeds[0] * speedMultiplyer * dt;
-        object.first -> position.y += objectSpeeds[1] * speedMultiplyer * dt;
-        object.second -> rotation += objectRotation * dt;
-    }
+                           Vector2& objectSpeeds, const float& objectRotation, const float& dt, const float& speedMultiplyer = 1);
 
     static void loopObject(const std::shared_ptr<Sprite>& object, const int& boardSize);
 

@@ -1,10 +1,11 @@
 #ifndef ASTROIDS_ENEMY_HPP
 #define ASTROIDS_ENEMY_HPP
 
+#include "threepp/threepp.hpp"
 #include "ObjectCreator.hpp"
 #include "LaserControls.hpp"
-#include <random>
-#include <algorithm>
+
+using namespace threepp;
 
 class Enemy {
 public:

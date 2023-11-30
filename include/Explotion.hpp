@@ -1,8 +1,9 @@
 #ifndef ASTROIDS_EXPLOTION_HPP
 #define ASTROIDS_EXPLOTION_HPP
 
-#include "ObjectCreator.hpp"
-#include "ObjectUpdater.hpp"
+#include "threepp/threepp.hpp"
+
+using namespace threepp;
 
 class ExplotionCreator {
 public:
@@ -15,7 +16,6 @@ public:
 
 private:
     std::vector<float> yellow_;
-    ObjectCreator Object3D;
     Color explotionColor;
     std::vector<std::pair<std::shared_ptr<Sprite>, std::shared_ptr<SpriteMaterial>>> explotionParticles_;
     std::vector<Vector2> explotionParticleSpeeds_;

@@ -20,6 +20,6 @@ add_executable(Astroids astroids.cpp
 target_include_directories(Astroids PRIVATE include)
 target_include_directories(Astroids PRIVATE textures)
 
-target_link_libraries(Astroids PUBLIC threepp::threepp imgui::imgui)
+target_link_libraries(Astroids PUBLIC threepp::threepp)
 
 #add_subdirectory(tests)

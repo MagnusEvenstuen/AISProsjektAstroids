@@ -1,12 +1,13 @@
 #include "Explotion.hpp"
-
+#include "ObjectCreator.hpp"
+#include "ObjectUpdater.hpp"
 #include <random>
 
 void ExplotionCreator::createExpolotion(const float & xPos, const float & yPos) {
     std::random_device rd;
     std::mt19937 gen(rd());
     for (int i = 0; i < 50; i++) {
-        auto explotionParticle = Object3D.createSprite(1, 1);
+        auto explotionParticle = ObjectCreator::createSprite(1, 1);
         explotionParticle.second -> color = explotionColor;
         explotionParticles_.push_back(explotionParticle);
         yellow_.push_back(1);
@@ -21,7 +22,7 @@ void ExplotionCreator::createExpolotion(const float & xPos, const float & yPos) 
 
 void ExplotionCreator::moveExplotion(const float & dt) {
     for (int i = 0; i < explotionParticles_.size(); i++) {
-        yellow_[i] -= 1 * dt;
+        yellow_[i] -= 1.0f * dt;
         ObjectUpdater::moveObject(explotionParticles_[i].first, explotionParticleSpeeds_[i], dt);
         explotionParticles_[i].first -> scale.x -= 1 * dt;
         explotionParticles_[i].first -> scale.y -= 1 * dt;

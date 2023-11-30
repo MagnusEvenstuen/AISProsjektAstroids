@@ -1,7 +1,9 @@
 #ifndef ASTROIDS_GAME_HPP
 #define ASTROIDS_GAME_HPP
-#include "ObjectCreator.hpp"
-#include <string>
+
+#include "threepp/threepp.hpp"
+
+using namespace threepp;
 
 class Game{
 public:
