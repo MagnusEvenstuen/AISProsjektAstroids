@@ -1,21 +1,32 @@
-# threepp vcpkg test
+# Astroids Game
 
-This is a standalone demo project that uses `threepp` as a dependency.
+This project is my exam project in the subject AIS1003.
+I have programmed a new take on the classic arcade game
+Asteroids. The main differences between my version, and the
+classic version is that my version have collition detection
+between astroids, even though it is a bit wonky, but most of
+the time it works all of the time. In addition
+I don't have astroids that split up when they get shot, but
+I have also added explotions when they get shot.
 
-In order to update `threepp`, replace the baseline value in [vcpkg-configuration.json](vcpkg-configuration.json).
-The baseline should point to a [commit](https://github.com/Ecos-platform/vcpkg-registry/commits/main) 
-from the [custom vcpkg registry](https://github.com/Ecos-platform/vcpkg-registry) that hosts the port.
+The setting for the game is the scene from the movie "The 
+Empire Strikes Back", where the Millenium Falcon is navigated
+through an astroid field to escape chasing Thai Fighters.
+That is some of the reason for the bad bots. 
 
-In the future, it could be added to the main vcpkg registry.
+## Dependencies
+This Project is built using Threepp. Which is a port of the
+popular JavaScript libarary Three.js. Other than that, I
+have just used the standard libarary for C++.
 
-As `vcpkg` is used, you need to tell CMake about it in order for dependency resolution to work: 
+## Executing Program
+You can run the program by using the green run button at the
+top line in CLion or Visual Studio. 
 
-`-DCMAKE_TOOLCHAIN_FILE=[path to vcpkg]/scripts/buildsystems/vcpkg.cmake`
+### Sources
+ChatGPT
 
-###### Building under MinGW
+Other students
 
-Under MinGW you'll need to specify the vcpkg triplet:
-```shell
--DVCPKG_TARGET_TRIPLET=x64-mingw-[static|dynamic]  # choose either `static` or `dynamic`.
--DVCPKG_HOST_TRIPLET=x64-mingw-[static|dynamic]    # <-- needed only if MSVC cannot be found. 
-```
+Both of theese have mostly been used for fixing errors, hence 
+why they arent creddited in spesific parts of the code.

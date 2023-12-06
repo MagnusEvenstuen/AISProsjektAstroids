@@ -1,36 +1,29 @@
 #ifndef ASTROIDS_ASTROID_HPP
 #define ASTROIDS_ASTROID_HPP
 
+#include "BaseObject.hpp"
 #include "threepp/threepp.hpp"
+#include <memory>
 
 using namespace threepp;
 
-class Astroid{
+class Astroid : public BaseObject {
 public:
-    Astroid(const int& boardSize) : boardSize_(boardSize) {
-    }
-    void createAstroids(const std::shared_ptr<Scene>& scene);
+    Astroid(const int& boardSize, const std::shared_ptr<Scene>& scene);
 
-    void updateAstroids(std::shared_ptr<Scene>& scene, const float dt);
+    void checkAstroidCollition(std::vector<std::shared_ptr<Astroid>>& otherAstroids);
 
+    bool update(const float dt) override;
 
-    std::vector<std::pair<std::shared_ptr<Sprite>, std::shared_ptr<SpriteMaterial>>>& getAstroids();
-
-    std::vector<Vector2>& getAstroidSpeeds();
-
-    std::vector<float>& getAstroidRotationSpeeds();
-
-    std::vector<float>& getAstroidSize();
+    float& getObjectSize();;
 
 private:
-    std::vector<std::pair<std::shared_ptr<Sprite>, std::shared_ptr<SpriteMaterial>>> astroids_;
-    std::vector<Vector2> astroidSpeeds_;
-    std::vector<float> astroidRotation_;
-    std::vector<float> astroidSize_;
     Scene scene_;
     int boardSize_;
-    const int minSpeed_ = -20;
-    const int maxSpeed_ = 20;
+    const float minSpeed_ = -20;
+    const float maxSpeed_ = 20;
+    float objectRotationSpeed_ = 0;
+    float objectSize_ = 0;
 };
 
 #endif //ASTROIDS_ASTROID_HPP

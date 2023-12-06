@@ -9,17 +9,19 @@ find_package(imgui CONFIG REQUIRED)
 add_executable(Astroids astroids.cpp
         src/Astroid.cpp
         src/CollitionDetection.cpp
-        src/Controls.cpp
+        src/Ship.cpp
         src/Enemy.cpp
-        src/Explotion.cpp
-        src/Game.cpp
-        src/LaserControls.cpp
+        src/ExplotionCreator.cpp
+        src/Laser.cpp
         src/ObjectCreator.cpp
-        src/ObjectUpdater.cpp)
+        src/BaseObject.cpp
+        src/GameLoop.cpp
+        src/BaseShip.cpp)
 
 target_include_directories(Astroids PRIVATE include)
 target_include_directories(Astroids PRIVATE textures)
+target_include_directories(Astroids PRIVATE src)
 
 target_link_libraries(Astroids PUBLIC threepp::threepp)
 
-#add_subdirectory(tests)
+add_subdirectory(tests)

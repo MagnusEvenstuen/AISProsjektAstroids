@@ -8,13 +8,11 @@ find_package(imgui CONFIG REQUIRED)
 
 add_executable(Astroid.cpp
         CollitionDetection.cpp
-        Controls.cpp
+        Ship.cpp
         Enemy.cpp
-        Explotion.cpp
-        Game.cpp
-        LaserControls.cpp
-        ObjectCreator.cpp
-        ObjectUpdater.cpp)
+        ExplotionCreator.cpp
+        Laser.cpp
+        ObjectCreator.cpp)
 
 target_include_directories(Astroids PRIVATE include)
 target_include_directories(Astroids PRIVATE textures)

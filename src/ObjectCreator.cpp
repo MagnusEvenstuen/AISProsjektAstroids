@@ -11,6 +11,7 @@ ObjectCreator::ObjectCreator() {
 }
 
 std::pair<std::shared_ptr<Sprite>, std::shared_ptr<SpriteMaterial>> ObjectCreator::createSprite(const float& sizeX, const float& sizeY, const std::string& texture) {
+    //Creation of 2D sprites.
     auto materialSprite = SpriteMaterial::create();
     if (!texture.empty()) {
         materialSprite->map = TextureLoader().load(texture);

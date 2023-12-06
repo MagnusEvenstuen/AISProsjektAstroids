@@ -1,72 +1,87 @@
 #include "Astroid.hpp"
-#include "ObjectUpdater.hpp"
 #include "ObjectCreator.hpp"
 #include <random>
+#include <iostream>
 
-
-void Astroid::createAstroids(const std::shared_ptr<Scene>& scene) {
+Astroid::Astroid(const int& boardSize, const std::shared_ptr<Scene>& scene): boardSize_(boardSize) {
+    //Creates astroids and assigns random values.
     std::random_device rd;
     std::mt19937 gen(rd());
-    for (int i = 0; i < 2; i++) {
-        std::uniform_real_distribution <float> size(3, 10);
-        astroidSize_.push_back(size(gen));
-        auto astroid = ObjectCreator::createSprite(astroidSize_.back(), astroidSize_.back(), "../textures/Astroid.png");
-        astroids_.push_back(astroid);
+    std::uniform_real_distribution<float> size(3, 10);
+    objectSize_ = size(gen);
+    std::filesystem::path texturePath = __FILE__;
+    texturePath = texturePath.parent_path().parent_path();
+    texturePath += "/textures/Astroid.png";
+    auto astroid = ObjectCreator::createSprite(objectSize_, objectSize_, texturePath.string());
+    sprite_ = astroid;
 
-        std::uniform_real_distribution <float> rotation(0, 3.14159265/2);
-        astroidRotation_.push_back(rotation(gen));
+    std::uniform_real_distribution <float> rotation(0, 3.14159265/2);
+    objectRotationSpeed_ = rotation(gen);
 
-        scene -> add(astroid.first);
+    scene -> add(astroid.first);
 
-        std::uniform_real_distribution <float> distribution(-1, 1);
-        std::bernoulli_distribution chooseSign;
+    std::uniform_real_distribution <float> distribution(-1, 1);
+    std::bernoulli_distribution chooseSign;
 
-        for (int j = 0; j < 4; j++) {
-            if (chooseSign(gen)) {
-                astroid.first -> position.x = chooseSign(gen) ? boardSize_ + 2 : -boardSize_ - 2;
-                astroid.first -> position.y = distribution(gen) * boardSize_ + 2;
-            } else {
-                astroid.first -> position.y = chooseSign(gen) ? boardSize_ + 2 : -boardSize_ - 2;
-                astroid.first -> position.x = distribution(gen) * boardSize_ + 2;
+    for (int j = 0; j < 2; j++) {
+        if (chooseSign(gen)) {
+            sprite_.first -> position.x = chooseSign(gen) ? boardSize_ + 2 : -boardSize_ - 2;
+            sprite_.first -> position.y = distribution(gen) * boardSize_ + 2;
+        } else {
+            sprite_.first -> position.y = chooseSign(gen) ? boardSize_ + 2 : -boardSize_ - 2;
+            sprite_.first -> position.x = distribution(gen) * boardSize_ + 2;
+        }
+    }
+
+    std::uniform_real_distribution<float> speedDistribution(minSpeed_, maxSpeed_);
+    objectSpeed_[0] = speedDistribution(gen);
+    objectSpeed_[1] = speedDistribution(gen);
+}
+
+void Astroid::checkAstroidCollition(std::vector<std::shared_ptr<Astroid>>& otherAstroids) {
+    //Checks if two astroids collide.
+    for (auto &otherAstroid : otherAstroids)
+    {
+        if (sprite_.first -> position.x > boardSize_ - 3 || sprite_.first -> position.x < -boardSize_ + 3 ||
+            sprite_.first -> position.y > boardSize_ - 3 || sprite_.first -> position.y < -boardSize_ + 3){
+            continue;
+        }
+        if (otherAstroid.get() != this) {
+            const float otherAstroidSize = otherAstroid -> getObjectSize();
+            Vector3 otherAstroidPosition = otherAstroid -> getPosition();
+            Vector2 otherAstroidSpeed = otherAstroid -> getObjectSpeed();
+
+            if (sqrt(pow(otherAstroidPosition.x - sprite_.first -> position.x, 2) + pow(otherAstroidPosition.y - sprite_.first -> position.y, 2))
+                <= otherAstroidSize / 2 + objectSize_ / 2) {
+                Vector2 collisonDirection(sprite_.first -> position.x - otherAstroidPosition.x,
+                                          sprite_.first -> position.y - otherAstroidPosition.y);
+                collisonDirection = collisonDirection.normalize();
+
+                Vector2 speedSetter;
+
+                objectSpeed_.x += (otherAstroidSize / objectSize_) * otherAstroidSpeed.x * collisonDirection[0] * 0.5;
+                objectSpeed_.y += (otherAstroidSize / objectSize_) * otherAstroidSpeed.y * collisonDirection[1] * 0.5;
             }
         }
-
-        std::uniform_int_distribution < int > speedDistribution(minSpeed_, maxSpeed_); // Kode fra ChatGPT
-        astroidSpeeds_.emplace_back(speedDistribution(gen), speedDistribution(gen)); //Slutt kode fra ChatGPT
     }
 }
 
-void Astroid::updateAstroids(std::shared_ptr < Scene > & scene,
-                             const float dt) {
-    for (long long i = 0; i < astroids_.size(); i++) {
-        ObjectUpdater::moveObject(astroids_[i], astroidSpeeds_[i], astroidRotation_[i], dt);
-
-        bool destroyAstroid = ObjectUpdater::destroyObject(astroids_[i].first, boardSize_, scene);
-        if (destroyAstroid) {
-            astroids_.erase(astroids_.begin() + i);
-            astroidSpeeds_.erase(astroidSpeeds_.begin() + i);
-            astroidRotation_.erase(astroidRotation_.begin() + i);
-            astroidSize_.erase(astroidSize_.begin() + i);
-            i--;
-        }
-        if (astroids_.size() > astroidRotation_.size()) {
-            astroidRotation_.resize(astroids_.size());
-        }
+bool Astroid::update(const float dt) {
+    //Updates the position of the astroids.
+    BaseObject::update(dt);
+    const float objectRotation = objectRotationSpeed_;
+    std::shared_ptr<SpriteMaterial> objectPicture = getSpriteMaterial();
+    objectPicture->rotation += objectRotation * dt;
+    if (sprite_.first->position.x > boardSize_ + objectSize_||
+        sprite_.first->position.x < -boardSize_-  objectSize_||
+        sprite_.first->position.y > boardSize_ + objectSize_||
+        sprite_.first->position.y < -boardSize_ - objectSize_){
+        scene_.remove(*sprite_.first);
+        return true;
     }
+    return false;
 }
 
-std::vector <std::pair<std::shared_ptr<Sprite>, std::shared_ptr<SpriteMaterial>>>& Astroid::getAstroids() {
-    return astroids_;
-}
-
-std::vector<Vector2>& Astroid::getAstroidSpeeds() {
-    return astroidSpeeds_;
-}
-
-std::vector <float>& Astroid::getAstroidRotationSpeeds() {
-    return astroidRotation_;
-}
-
-std::vector<float>& Astroid::getAstroidSize() {
-    return astroidSize_;
+float& Astroid::getObjectSize() {
+    return objectSize_;
 }

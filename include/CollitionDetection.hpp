@@ -1,28 +1,30 @@
 #ifndef ASTROIDS_COLLITIONDETECTION_HPP
 #define ASTROIDS_COLLITIONDETECTION_HPP
 
+#include "ExplotionCreator.hpp"
 #include "threepp/threepp.hpp"
-#include "Explotion.hpp"
+#include "BaseObject.hpp"
+#include "Astroid.hpp"
+#include "Enemy.hpp"
+#include "Laser.hpp"
+#include "Ship.hpp"
 
 using namespace threepp;
 
 class CollitionDetection {
-public: static void collitionChangeDirection(const std::vector<std::pair<std::shared_ptr<Sprite>, std::shared_ptr<SpriteMaterial>>>& objects, std::vector<Vector2>& objectSpeeds, std::vector<float>& objectRotations, std::vector<float>& objectSize);
+public:
 
-    static int collitionDestroy(const std::vector<std::pair<std::shared_ptr<Sprite>, std::shared_ptr<SpriteMaterial>>>& destroyers, std::vector<std::pair<std::shared_ptr<Sprite>, std::shared_ptr<SpriteMaterial>>>& destroyds,
-                                const float& destroydsHitBox,  const float& destroyerHitBox, const std::shared_ptr<Scene>& scene, ExplotionCreator& explotionCreator, std::vector<Vector2>* destroydSpeeds = nullptr,
-                                std::vector<float>* destroyedRotation = {});
 
-    static int collitionDestroy(const std::vector<std::pair<std::shared_ptr<Sprite>, std::shared_ptr<SpriteMaterial>>>& destroyers, std::vector<std::pair<std::shared_ptr<Sprite>, std::shared_ptr<SpriteMaterial>>>& destroyds,
-                                std::vector<float>& destroydsHitBox,  const float& destroyerHitBox,
-                                const std::shared_ptr<Scene>& scene, ExplotionCreator& explotionCreator, std::vector<Vector2>* destroydSpeeds = nullptr,
-                                std::vector<float>* destroyedRotation = {});
 
-    static int collitionDestroy(const std::vector<std::pair<std::shared_ptr<Sprite>, std::shared_ptr<SpriteMaterial>>>& destroyers, std::pair<std::shared_ptr<Sprite>, std::shared_ptr<SpriteMaterial>>& destroyd,
-                                const float& destroyersHitBox, const float& destroydsHitBox, int& score);
+    static bool collitionDestroy(std::shared_ptr<Astroid>& astroid, std::vector<Laser>& lasers);
 
-    static int collitionDestroy(const std::vector<std::pair<std::shared_ptr<Sprite>, std::shared_ptr<SpriteMaterial>>>& destroyers, std::pair<std::shared_ptr<Sprite>, std::shared_ptr<SpriteMaterial>>& destroyd,
-                                const std::vector<float>& destroyersHitBox, const float& destroydsHitBox, int& score);
+    static bool collitionDestroy(std::shared_ptr<Astroid>& astroid, Enemy& enemy);
+
+    static bool collitionDestroy(std::vector<Laser>& lasers, Enemy& enemy);;
+
+    static bool collitionReset(std::shared_ptr<Astroid>& astroid, Ship& ship);
+
+    static bool collitionReset(std::vector<Laser>& lasers, Ship& ship);;
 };
 
 #endif //ASTROIDS_COLLITIONDETECTION_HPP
