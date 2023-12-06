@@ -52,7 +52,7 @@ void Ship::move(const float dt) {
     sprite_.second -> rotation += (leftPressed_ - rightPressed_) * M_PI / 180 * 200 * dt;
     sprite_.first -> rotation.z += (leftPressed_ - rightPressed_) * M_PI / 180 * 200 * dt;
 
-    Vector2 direction(cos(sprite_.first -> rotation.z()), sin(sprite_.first -> rotation.z()));
+    Vector2 direction(float (cos(sprite_.first -> rotation.z())), float (sin(sprite_.first -> rotation.z())));
     objectSpeed_ = direction;
 
     BaseShip::updateLasers(dt, scene_);

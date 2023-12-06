@@ -1,5 +1,6 @@
 #include "CollitionDetection.hpp"
 #include "ObjectCreator.hpp"
+#include <cmath>
 
 bool CollitionDetection::collitionDestroy(std::shared_ptr<Astroid>& astroid, std::vector<Laser>& lasers) {
     //All collition Destroy functions are functions to destroy objects.
