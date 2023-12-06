@@ -34,7 +34,7 @@ void Enemy::moveEnemy(const std::shared_ptr<Sprite> & ship,
     double turnScore = 0.5;
     Vector2 directionEnemyShip(sprite_.first -> position.x, sprite_.first -> position.y);
     directionEnemyShip = directionEnemyShip.normalize();
-    Vector2 direction(cos(sprite_.first -> rotation.z()), sin(sprite_.first -> rotation.z()));
+    Vector2 direction((float)cos(sprite_.first -> rotation.z()), sin(sprite_.first -> rotation.z()));
     Vector2 directionShipEnemyShip(sprite_.first -> position.x - ship -> position.x,
                                    sprite_.first -> position.y - ship -> position.y);
     directionShipEnemyShip.normalize();
