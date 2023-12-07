@@ -93,31 +93,37 @@ bool GameLoop::astroidUpdater(const float dt) {
 
 bool GameLoop::enemyUpdater(const float dt) {
     bool reset = false;     //Updates enemy and delets what should be deleted
-    for (auto es = enemies_.begin(); es != enemies_.end();){
-        auto& enemy = *es;
-        enemy.moveEnemy(ship_.getSprite(), astroids_, dt);
-        bool destroy = CollitionDetection::collitionDestroy(ship_.getLaser(), enemy);
-        std::vector<Laser> lasesrs = ship_.getLaser();
+    if (!enemies_.empty()) {
+        for (auto es = enemies_.begin(); es != enemies_.end();) {
+            auto &enemy = *es;
+            enemy.moveEnemy(ship_.getSprite(), astroids_, dt);
+            bool destroy = CollitionDetection::collitionDestroy(ship_.getLaser(), enemy);
+            std::vector<Laser> lasesrs = ship_.getLaser();
 
-        if (destroy) {
-            std::vector<Laser> lasers = enemy.getLaser();
-            score_++;
+            if (destroy)
+            {
+                std::vector<Laser> lasers = enemy.getLaser();
+                score_++;
 
-            for (auto &laser : lasers){
-                scene_ -> remove(*laser.getSprite());
+                for (auto &laser: lasers)
+                {
+                    scene_->remove(*laser.getSprite());
+                }
+
+                for (int i = 0; i < 50; i++)
+                {
+                    explotionParticles_.emplace_back(scene_, enemy.getPosition());
+                }
+
+                scene_->remove(*enemy.getSprite());
+                es = enemies_.erase(es);
+            } else
+            {
+                es++;
             }
-
-            for (int i = 0; i < 50; i++){
-                explotionParticles_.emplace_back(scene_, enemy.getPosition());
-            }
-
-            scene_ -> remove(*enemy.getSprite());
-            es = enemies_.erase(es);
-        } else {
-            es++;
+            std::vector<Laser> enemyLasers = enemy.getLaser();
+            reset = CollitionDetection::collitionReset(enemyLasers, ship_);
         }
-        std::vector<Laser> enemyLasers = enemy.getLaser();
-        reset = CollitionDetection::collitionReset(enemyLasers, ship_);
     }
     return reset;
 }
