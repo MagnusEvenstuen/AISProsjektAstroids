@@ -1,9 +1,7 @@
 #ifndef ASTROIDS_BASESHIP_HPP
 #define ASTROIDS_BASESHIP_HPP
 
-#include "BaseObject.hpp"
 #include "Laser.hpp"
-#include "threepp/threepp.hpp"
 
 using namespace threepp;
 

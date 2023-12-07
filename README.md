@@ -12,12 +12,39 @@ I have also added explotions when they get shot.
 The setting for the game is the scene from the movie "The 
 Empire Strikes Back", where the Millenium Falcon is navigated
 through an astroid field to escape chasing Thai Fighters.
-That is some of the reason for the bad bots. 
+
+The controls for the game are quite simple: 
+
+w/arrow up = forward
+
+d/arrow right = right 
+
+a/arrow left = left
+
+space = shoot.
+
+## Functionalities
+Controls
+
+Bots
+
+Movement
+
+Collition physics (between astroids)
+
+Object Creation
+
+Testing System
 
 ## Dependencies
 This Project is built using Threepp. Which is a port of the
 popular JavaScript libarary Three.js. Other than that, I
 have just used the standard libarary for C++.
+
+As vcpkg is used, you need to tell CMake about it in order for dependency 
+resolution to work:
+
+-DCMAKE_TOOLCHAIN_FILE=[path to vcpkg]/scripts/buildsystems/vcpkg.cmake
 
 ## Executing Program
 You can run the program by using the green run button at the
@@ -26,7 +53,10 @@ top line in CLion or Visual Studio.
 ### Sources
 ChatGPT
 
-Other students
+Stack overflow
 
-Both of theese have mostly been used for fixing errors, hence 
-why they arent creddited in spesific parts of the code.
+GitHub(https://github.com/dadul96/ElasticCollisionSimulation)
+
+All of theese are mostly been used for fixing errors, hence 
+why they arent creddited in spesific parts of the code. From
+the GitHub link I only used the code for HitBoxes.

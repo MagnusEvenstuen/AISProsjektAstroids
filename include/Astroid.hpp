@@ -3,7 +3,7 @@
 
 #include "BaseObject.hpp"
 #include "threepp/threepp.hpp"
-#include <memory>
+
 
 using namespace threepp;
 

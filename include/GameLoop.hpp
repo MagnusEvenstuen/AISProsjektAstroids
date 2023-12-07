@@ -2,12 +2,7 @@
 #define ASTROIDS_GAMELOOP_HPP
 
 #include "CollitionDetection.hpp"
-#include "Ship.hpp"
-#include "Astroid.hpp"
 #include "Enemy.hpp"
-#include "ExplotionCreator.hpp"
-#include "BaseObject.hpp"
-#include <iostream>
 
 class GameLoop{
 public:

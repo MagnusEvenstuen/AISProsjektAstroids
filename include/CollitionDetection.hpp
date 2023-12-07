@@ -2,11 +2,7 @@
 #define ASTROIDS_COLLITIONDETECTION_HPP
 
 #include "ExplotionCreator.hpp"
-#include "threepp/threepp.hpp"
-#include "BaseObject.hpp"
-#include "Astroid.hpp"
 #include "Enemy.hpp"
-#include "Laser.hpp"
 #include "Ship.hpp"
 
 using namespace threepp;

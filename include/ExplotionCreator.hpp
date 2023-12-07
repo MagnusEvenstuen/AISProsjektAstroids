@@ -13,7 +13,7 @@ public:
     bool update(const float& dt);
 
 private:
-    float yellow_ = 0;
+    float yellow_ = 0.9f;
     Color explotionColor;
     std::shared_ptr<Scene> scene_;
 };

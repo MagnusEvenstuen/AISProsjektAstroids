@@ -1,9 +1,7 @@
 #define CATCH_CONFIG_MAIN
-#include "catch.hpp"
+#include <catch.hpp>
 #include "CollitionDetection.hpp"
 #include "GameLoop.hpp"
-#include "Laser.hpp"
-#include "Ship.hpp"
 #include "threepp/threepp.hpp"
 
 using namespace threepp;
@@ -53,19 +51,19 @@ TEST_CASE("Astroid Collition"){
 
 
     std::shared_ptr<Sprite> astroidV0Object = astroids[1]->getSprite();
-    astroidV0Object->position.x = 10;
-    astroidV0Object->position.y = 15;
+    astroidV0Object -> position.x = 10;
+    astroidV0Object -> position.y = 15;
 
     Vector2 astroidV0Speed = astroids[0]->getObjectSpeed();
     Vector2 astroidV1Speed = astroids[1]->getObjectSpeed();
     Vector2 astroidV2Speed = astroids[2]->getObjectSpeed();
 
     std::shared_ptr<Sprite> astroidV1Object = astroids[2]->getSprite();
-    astroidV1Object->position.x = -15;
-    astroidV1Object->position.y = -10;
+    astroidV1Object -> position.x = -15;
+    astroidV1Object -> position.y = -10;
 
     for (auto& astroid : astroids) {
-        astroid->checkAstroidCollition(astroids);
+        astroid -> checkAstroidCollition(astroids);
     }
     REQUIRE(astroidV0Speed != astroids[0] -> getObjectSpeed());     //Could check if it got correct speed
     REQUIRE(astroidV1Speed != astroids[1] -> getObjectSpeed());     //But I think a different speed is good enough
@@ -116,4 +114,40 @@ TEST_CASE("Game Reset"){
     REQUIRE(enemies.empty());
     REQUIRE(scene->children.size() == 1);   //1 because ship isn't removed
     REQUIRE(score == 0);
+}
+
+TEST_CASE("CollitionDetection"){    //All collition detection functions are almost the same
+    std::shared_ptr<Scene> scene = Scene::create();
+    Ship ship(scene, 35);
+
+    GameLoop gameLoop(35, ship, scene);
+
+    gameLoop.createAstroids(4);
+    std::vector<std::shared_ptr<Astroid>> astroids = gameLoop.getAstroids();
+
+    std::shared_ptr<Sprite> astroidObject = astroids[0] -> getSprite();
+    astroidObject -> position.x = 3;
+    astroidObject -> position.y = 3;
+
+    std::shared_ptr<Sprite> shipSprite = ship.getSprite();
+    shipSprite -> position.x = 3;
+    shipSprite -> position.y = 3;
+
+    bool collideFalse = CollitionDetection::collitionReset(astroids[1], ship);  //This object is at the edge
+    bool collideTrue = CollitionDetection::collitionReset(astroids[0], ship);
+
+    REQUIRE(!collideFalse);
+    REQUIRE(collideTrue);
+}
+
+TEST_CASE("ObjectCreator"){
+    float x = 3.0f;
+    float y = 9.0f;
+
+    std::pair<std::shared_ptr<Sprite>, std::shared_ptr<SpriteMaterial>> object = ObjectCreator::createSprite(x, y);
+
+    Vector3 objectSize = object.first -> scale;
+
+    REQUIRE(objectSize.x == x);
+    REQUIRE(objectSize.y == y);
 }

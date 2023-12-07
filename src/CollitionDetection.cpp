@@ -1,5 +1,4 @@
 #include "CollitionDetection.hpp"
-#include "ObjectCreator.hpp"
 #include <cmath>
 
 bool CollitionDetection::collitionDestroy(std::shared_ptr<Astroid>& astroid, std::vector<Laser>& lasers) {
@@ -56,7 +55,6 @@ bool CollitionDetection::collitionReset(std::shared_ptr<Astroid>& astroid, Ship&
     const Vector3 astroidPosition = astroid -> getPosition();
     const float astroidSize = astroid -> getObjectSize();
 
-
     const float distance = sqrt(pow(astroidPosition.x - shipPosition.x, 2) + pow(astroidPosition.y - shipPosition.y, 2));
     const float hitBox = astroidSize / 2 + 5 / 2;
 
@@ -70,7 +68,6 @@ bool CollitionDetection::collitionReset(std::vector<Laser>& lasers, Ship& ship) 
     for (auto &laser : lasers) {
         const Vector3 shipPosition = ship.getPosition();
         const Vector3 laserPosition = laser.getPosition();
-
 
         const float distance = sqrt(pow(shipPosition.x - laserPosition.x, 2) + pow(shipPosition.y - laserPosition.y, 2));
         const float hitBox = 5 / 2 + 1 / 2;

@@ -1,7 +1,6 @@
 #include "Astroid.hpp"
 #include "ObjectCreator.hpp"
 #include <random>
-#include <iostream>
 
 Astroid::Astroid(const int& boardSize, const std::shared_ptr<Scene>& scene): boardSize_(boardSize) {
     //Creates astroids and assigns random values.
@@ -46,6 +45,7 @@ void Astroid::checkAstroidCollition(std::vector<std::shared_ptr<Astroid>>& other
             sprite_.first -> position.y > boardSize_ - 3 || sprite_.first -> position.y < -boardSize_ + 3){
             continue;
         }
+
         if (otherAstroid.get() != this) {
             const float otherAstroidSize = otherAstroid -> getObjectSize();
             Vector3 otherAstroidPosition = otherAstroid -> getPosition();
@@ -56,8 +56,6 @@ void Astroid::checkAstroidCollition(std::vector<std::shared_ptr<Astroid>>& other
                 Vector2 collisonDirection(sprite_.first -> position.x - otherAstroidPosition.x,
                                           sprite_.first -> position.y - otherAstroidPosition.y);
                 collisonDirection = collisonDirection.normalize();
-
-                Vector2 speedSetter;
 
                 objectSpeed_.x += (otherAstroidSize / objectSize_) * otherAstroidSpeed.x * collisonDirection[0] * 0.5;
                 objectSpeed_.y += (otherAstroidSize / objectSize_) * otherAstroidSpeed.y * collisonDirection[1] * 0.5;
@@ -72,6 +70,7 @@ bool Astroid::update(const float dt) {
     const float objectRotation = objectRotationSpeed_;
     std::shared_ptr<SpriteMaterial> objectPicture = getSpriteMaterial();
     objectPicture->rotation += objectRotation * dt;
+
     if (sprite_.first->position.x > boardSize_ + objectSize_||
         sprite_.first->position.x < -boardSize_-  objectSize_||
         sprite_.first->position.y > boardSize_ + objectSize_||
@@ -79,6 +78,7 @@ bool Astroid::update(const float dt) {
         scene_.remove(*sprite_.first);
         return true;
     }
+
     return false;
 }
 

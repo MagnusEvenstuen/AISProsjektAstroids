@@ -26,7 +26,3 @@ bool Laser::update(const float& dt, const int& boardSize) {
         return false;
     }
 }
-
-std::pair<std::shared_ptr<Sprite>, std::shared_ptr<SpriteMaterial>>& Laser::getLasers() {
-    return sprite_;
-}

@@ -55,12 +55,10 @@ bool GameLoop::astroidUpdater(const float dt) {
                     for (auto &laser : lasers){
                         scene_ -> remove(*laser.getSprite());
                     }
-
                     es = enemies_.erase(es);
                     for (int i = 0; i < 50; i++){
                         explotionParticles_.emplace_back(scene_, enemy.getPosition());
                     }
-
                 } else {
                     es++;
                 }
@@ -85,6 +83,7 @@ bool GameLoop::astroidUpdater(const float dt) {
         } else {
             it++;
         }
+
         if (!reset) {
             reset = CollitionDetection::collitionReset(astroid, ship_);
         }
@@ -95,16 +94,12 @@ bool GameLoop::astroidUpdater(const float dt) {
 bool GameLoop::enemyUpdater(const float dt) {
     bool reset = false;     //Updates enemy and delets what should be deleted
     for (auto es = enemies_.begin(); es != enemies_.end();){
-        auto enemy = *es;
+        auto& enemy = *es;
         enemy.moveEnemy(ship_.getSprite(), astroids_, dt);
         bool destroy = CollitionDetection::collitionDestroy(ship_.getLaser(), enemy);
         std::vector<Laser> lasesrs = ship_.getLaser();
-        /*if (!lasesrs.empty()) {
-            Vector3 Lasersss = lasesrs[0].getPosition();
-            std::cout << Lasersss.x << std::endl;
-        }*/
+
         if (destroy) {
-            scene_ -> remove(*enemy.getSprite());
             std::vector<Laser> lasers = enemy.getLaser();
             score_++;
 
@@ -112,10 +107,12 @@ bool GameLoop::enemyUpdater(const float dt) {
                 scene_ -> remove(*laser.getSprite());
             }
 
-            es = enemies_.erase(es);
             for (int i = 0; i < 50; i++){
                 explotionParticles_.emplace_back(scene_, enemy.getPosition());
             }
+
+            scene_ -> remove(*enemy.getSprite());
+            es = enemies_.erase(es);
         } else {
             es++;
         }
@@ -128,8 +125,9 @@ bool GameLoop::enemyUpdater(const float dt) {
 void GameLoop::explotionParticleUpdater(const float dt) {
     //Updates explotion particles.
     for (auto it = explotionParticles_.begin(); it != explotionParticles_.end();){
-        auto explotionParticle = *it;
+        auto& explotionParticle = *it;
         bool remove = explotionParticle.update(dt);
+
         if (remove){
             scene_ -> remove(*explotionParticle.getSprite());
             it = explotionParticles_.erase(it);

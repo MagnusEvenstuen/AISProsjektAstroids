@@ -50,6 +50,7 @@ void Enemy::moveEnemy(const std::shared_ptr<Sprite> & ship,
                    direction[1] - 0.4 < -directionAstroid[1]) {
             turnScore -= 0.8 / astroidShipDistance / 4;
         }
+
         if (directionEnemyShip[0] + 0.3 > -directionAstroid[0] &&
             directionEnemyShip[1] + 0.3 > -directionAstroid[1]) {
             turnScore += 0.8 / astroidShipDistance / 4;
@@ -85,8 +86,4 @@ void Enemy::moveEnemy(const std::shared_ptr<Sprite> & ship,
     BaseShip::moveShip(dt, boardSize_);
 
     BaseShip::updateLasers(dt, scene_);
-}
-
-std::pair<std::shared_ptr<Sprite>, std::shared_ptr<SpriteMaterial>>& Enemy::getEnemyShips() {
-    return sprite_;
 }
