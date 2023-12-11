@@ -1,5 +1,4 @@
 #include "Astroid.hpp"
-#include "ObjectCreator.hpp"
 #include <random>
 
 Astroid::Astroid(const int& boardSize, const std::shared_ptr<Scene>& scene): boardSize_(boardSize) {

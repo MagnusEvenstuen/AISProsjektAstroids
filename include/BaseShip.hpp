@@ -10,7 +10,7 @@ public:
 
     void moveShip(const float dt, const int boardSize);
 
-    void updateLasers(const float dt, std::shared_ptr<Scene> scene);
+    void updateLasers(const float dt, const std::shared_ptr<Scene>& scene);
 
     std::vector<Laser>& getLaser();
 

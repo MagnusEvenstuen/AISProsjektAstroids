@@ -1,5 +1,4 @@
 #include "ExplotionCreator.hpp"
-#include "ObjectCreator.hpp"
 #include <random>
 
 ExplotionCreator::ExplotionCreator(std::shared_ptr<Scene>& scene, Vector3 position): explotionColor(1, 0.9, 0), scene_(scene) {

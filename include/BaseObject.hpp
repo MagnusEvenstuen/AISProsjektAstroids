@@ -13,9 +13,9 @@ public:
 
     std::shared_ptr<Sprite>& getSprite();
 
-    Vector3& getPosition();
+    Vector3& getPosition() const;
 
-    std::shared_ptr<SpriteMaterial> getSpriteMaterial();
+    std::shared_ptr<SpriteMaterial> getSpriteMaterial() const;
 
     virtual bool update(const float dt);
 

@@ -4,11 +4,11 @@ Vector2& BaseObject::getObjectSpeed() {
     return objectSpeed_;
 }
 
-Vector3& BaseObject::getPosition() {
+Vector3& BaseObject::getPosition() const {
     return sprite_.first->position;
 }
 
-std::shared_ptr<SpriteMaterial> BaseObject::getSpriteMaterial() {
+std::shared_ptr<SpriteMaterial> BaseObject::getSpriteMaterial() const {
     return sprite_.second;
 }
 

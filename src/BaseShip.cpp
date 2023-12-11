@@ -11,7 +11,7 @@ void BaseShip::moveShip(const float dt, const int boardSize) {
     BaseObject::update(dt);
 }
 
-void BaseShip::updateLasers(const float dt, std::shared_ptr<Scene> scene) {
+void BaseShip::updateLasers(const float dt, const std::shared_ptr<Scene>& scene) {
     for (auto it = lasers_.begin(); it != lasers_.end();){
         auto laser = *it;
         bool remove = laser.update(dt, boardSize_);
