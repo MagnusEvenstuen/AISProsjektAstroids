@@ -8,8 +8,6 @@ Vector3& BaseObject::getPosition() {
     return sprite_.first->position;
 }
 
-
-
 std::shared_ptr<SpriteMaterial> BaseObject::getSpriteMaterial() {
     return sprite_.second;
 }

@@ -2,6 +2,7 @@
 #define ASTROIDS_BASEOBJECT_HPP
 
 #include "threepp/threepp.hpp"
+#include "ObjectCreator.hpp"
 
 using namespace threepp;
 
@@ -9,8 +10,6 @@ class BaseObject{
 public:
 
     Vector2& getObjectSpeed();
-
-    float& getObjectRotationSpeed();
 
     std::shared_ptr<Sprite>& getSprite();
 

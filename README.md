@@ -60,3 +60,5 @@ GitHub(https://github.com/dadul96/ElasticCollisionSimulation)
 All of theese are mostly been used for fixing errors, hence 
 why they arent creddited in spesific parts of the code. From
 the GitHub link I only used the code for HitBoxes.
+
+Kandidatnummer: 10017

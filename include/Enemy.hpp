@@ -3,7 +3,6 @@
 
 #include "Astroid.hpp"
 #include "BaseShip.hpp"
-#include "ObjectCreator.hpp"
 #include "threepp/threepp.hpp"
 
 using namespace threepp;

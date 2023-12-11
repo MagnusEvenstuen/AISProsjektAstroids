@@ -1,5 +1,4 @@
 #include "GameLoop.hpp"
-#include <iostream>
 
 GameLoop::GameLoop(const int boardSize, Ship& ship, std::shared_ptr<Scene>& scene)
         : boardSize_(boardSize), ship_(ship), scene_(scene){
@@ -24,7 +23,6 @@ void GameLoop::reset() {
 void GameLoop::createAstroids(const int astroidNumber) {
     for (int i = 0; i < astroidNumber; i++){
         astroids_.emplace_back(std::make_shared<Astroid>(boardSize_, scene_));
-        //std::cout << astroids_.size() <<std::endl;
     }
 }
 
